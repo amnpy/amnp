@@ -18,7 +18,7 @@ body {
   background-size: 100% 100%;
 }
 </style> 
-<h1 style="color:white;">AMNP</h1>
+<i>><h1 style="color:white;">AMNP</h1><i>
  <p style="color:white;">Bem Vindo</p>
  <p style="color:white;">hehe</p>
  <p style="color:white;">Ao Meu Humilde Mundo</p>
@@ -47,3 +47,21 @@ body {
     <span class="color">o</span>
     <span class="color">k</span> 
 </div>
+
+<div id="control-panel">
+  <p>Number of Characters (<span id="charCount">8</span>):</p>
+  <input id="charAmount" type="range" min="1" max="50" value="8">
+</div>
+<div class="cta-wrapper">
+<a href="#" class="cta-button">Click Me</a>
+</div>
+<svg class="flt_svg" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="flt_tag">
+      <!-- Change stdDeviation to increase/decrease the rounding of the corners -->
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />    
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="flt_tag" />
+      <feComposite in="SourceGraphic" in2="flt_tag" operator="atop"/>
+    </filter>
+  </defs>
+</svg>
