@@ -31,7 +31,7 @@ body {
         </a>
       </div>
 
-      <div id="genre">Punk</div>
+  
   </div>
 
 
@@ -48,6 +48,70 @@ body {
     <span class="color">k</span> 
 </div>
 
+ 
+let charAmountSlider = document.getElementById("charAmount");
+let charCount = document.getElementById("charCount");
+let ctaButton = document.getElementsByClassName("cta-button").item(0);
+charAmountSlider.addEventListener("input", () => {
+  let count = charAmountSlider.value;
+  charCount.innerHTML = count;
+  ctaButton.innerHTML = "a".repeat(count);
+});
+
+.cta-wrapper {
+  filter: url(#flt_tag);
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 10px 30px 10px 10px;
+  background-color: #004c97;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 14px;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  line-height: 1.2;
+  position: relative;
+  clip-path: polygon( 0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+  text-decoration: none;
+}
+
+#control-panel {
+  border: 5px solid #aaa;
+  border-radius: 10px;
+  background-color: #ddd;
+  margin-bottom: 10px;
+  width: 50%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+#control-panel * {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+.flt_svg {
+    visibility: hidden; 
+    position: absolute;
+    width: 0px;
+    height: 0px;
+}
+ 
 <div id="control-panel">
   <p>Number of Characters (<span id="charCount">8</span>):</p>
   <input id="charAmount" type="range" min="1" max="50" value="8">
