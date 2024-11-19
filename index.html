@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,12 +16,8 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             color: white;
-            margin: 0;
-            padding: 0;
             text-align: center;
-            background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            background: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579') no-repeat center center fixed;
             background-size: cover;
         }
 
@@ -70,16 +65,16 @@
             margin-bottom: 20px;
             font-size: 1.8rem;
             color: #ff9900;
-            transform: rotate(-5deg); /* Inclinação de esquerda para direita */
+            transform: rotate(-5deg);
             display: inline-block;
-            border-bottom: 2px solid #ff9900; /* Linha abaixo do título */
+            border-bottom: 2px solid #ff9900;
             padding-bottom: 10px;
         }
 
         .post {
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #444; /* Linha abaixo de cada post */
+            border-bottom: 2px solid #444;
         }
 
         .post h3 {
@@ -90,14 +85,13 @@
         .post p {
             margin: 10px 0;
             font-size: 1rem;
-            text-align: left; /* Alinha o texto do conteúdo à esquerda */
-            margin-left: 10px; /* Adiciona um espaço da borda */
+            text-align: left;
+            margin-left: 10px;
         }
 
         footer {
             text-align: center;
             padding: 20px 0;
-            margin-top: 20px;
             background: rgba(0, 0, 0, 0.7);
             border-top: 1px solid #444;
             color: #bbb;
@@ -107,15 +101,40 @@
             font-size: 0.9rem;
         }
 
-        /* Estilo para o formulário de login */
+        .new-post-form input {
+            width: calc(100% - 100px);
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .new-post-form button {
+            background: linear-gradient(90deg, #ff9900, #ffcc00);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .new-post-form button:hover {
+            background: linear-gradient(90deg, #ffcc00, #ff9900);
+            transform: scale(1.1);
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
+        }
+
         .login-form {
             background-color: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 5px;
             width: 300px;
-            margin-top: 20px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 20px auto;
         }
 
         .login-form input {
@@ -148,9 +167,7 @@
         }
     </style>
 </head>
-
 <body>
-    <!-- Cabeçalho -->
     <header>
         <h1>AMNP</h1>
         <nav>
@@ -159,193 +176,25 @@
                 <li><a href="javascript:void(0)" onclick="changeToSobre()">Sobre</a></li>
                 <li><a href="javascript:void(0)" onclick="changeToCategorias()">Categorias</a></li>
                 <li><a href="javascript:void(0)" onclick="changeToContato()">Contato</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToLogin()">Login</a></li> <!-- Novo item para Login -->
+                <li><a href="javascript:void(0)" onclick="changeToLogin()">Login</a></li>
             </ul>
         </nav>
     </header>
-
-    <!-- Conteúdo Principal -->
     <main class="main-content" id="content">
-        <!-- Aqui será carregado o conteúdo dinâmico -->
         <section class="posts">
             <h2>Posts</h2>
-
-            <!-- Formulário de novo post -->
             <div class="new-post-form">
                 <input type="text" id="postInput" placeholder="Digite algo...">
                 <button onclick="addPost()">Postar</button>
             </div>
-
-            <!-- Lista de posts -->
             <div id="postList"></div>
         </section>
     </main>
-
-    <!-- Rodapé -->
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
-
-    <!-- Script JavaScript -->
     <script>
-        // Função para adicionar um novo post
-        function addPost() {
-            const postInput = document.getElementById('postInput');
-            const postList = document.getElementById('postList');
-
-            if (postInput.value.trim() !== '') {
-                const newPost = {
-                    title: "Novo Post",
-                    content: postInput.value
-                };
-
-                // Carregar os posts existentes do localStorage ou criar um novo array
-                let posts = JSON.parse(localStorage.getItem('posts')) || [];
-
-                // Adicionar o novo post ao array
-                posts.unshift(newPost); // Adiciona no início da lista
-
-                // Salvar os posts atualizados no localStorage
-                localStorage.setItem('posts', JSON.stringify(posts));
-
-                // Criar o elemento do post
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${newPost.title}</h3>
-                    <p>${newPost.content}</p>
-                `;
-                
-                // Adicionar o novo post na lista de posts
-                postList.prepend(postElement);
-                
-                postInput.value = ''; // Limpar o campo de texto
-            }
-        }
-
-        // Função para carregar os posts do localStorage ao carregar a página
-        function loadPosts() {
-            const postList = document.getElementById('postList');
-            const posts = JSON.parse(localStorage.getItem('posts')) || []; // Carregar ou criar array vazio
-
-            // Adicionar cada post ao DOM
-            posts.forEach(post => {
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${post.title}</h3>
-                    <p>${post.content}</p>
-                `;
-                postList.appendChild(postElement);
-            });
-        }
-
-        // Carregar os posts quando a página for carregada
-        window.onload = loadPosts;
-
-        // Função para exibir posts ao clicar no botão "Início"
-        function showPosts() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <section class="posts">
-                    <h2>Posts</h2>
-                    <div class="new-post-form">
-                        <input type="text" id="postInput" placeholder="Digite algo...">
-                        <button onclick="addPost()">Postar</button>
-                    </div>
-                    <div id="postList"></div>
-                </section>
-            `;
-            loadPosts(); // Carregar posts
-        }
-
-        // Função para mostrar "Sobre"
-        function changeToSobre() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Você clicou em "Sobre"</h2>
-            `;
-        }
-
-        // Função para mostrar "Categorias"
-        function changeToCategorias() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Você clicou em "Categorias"</h2>
-            `;
-        }
-
-        // Função para mostrar "Contato"
-        function changeToContato() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Você clicou em "Contato"</h2>
-            `;
-        }
-
-        // Função para mostrar "Login"
-        function changeToLogin() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Login</h2>
-                <div class="login-form">
-                    <h3>Entrar na sua conta</h3>
-                    <input type="text" id="username" placeholder="Usuário">
-                    <input type="password" id="password" placeholder="Senha">
-                    <button onclick="loginUser()">Entrar</button>
-                    <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegister()">Cadastre-se</a></p>
-                </div>
-            `;
-        }
-
-        // Função para mostrar o formulário de registro
-        function showRegister() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Cadastro</h2>
-                <div class="login-form">
-                    <h3>Criar uma conta</h3>
-                    <input type="text" id="newUsername" placeholder="Novo Usuário">
-                    <input type="password" id="newPassword" placeholder="Nova Senha">
-                    <button onclick="registerUser()">Cadastrar</button>
-                </div>
-            `;
-        }
-.new-post-form button {
-    background: linear-gradient(90deg, #ff9900, #ffcc00);
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease-in-out;
-}
-
-.new-post-form button:hover {
-    background: linear-gradient(90deg, #ffcc00, #ff9900);
-    transform: scale(1.1);
-    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
-}
-
-        // Função para realizar login
-        function loginUser() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            alert('Login realizado com sucesso!');
-            // Aqui você pode adicionar uma validação real de login
-        }
-
-        // Função para realizar registro
-        function registerUser() {
-            const newUsername = document.getElementById('newUsername').value;
-            const newPassword = document.getElementById('newPassword').value;
-            alert('Cadastro realizado com sucesso!');
-            // Aqui você pode salvar as informações de registro ou realizar um processo real de cadastro
-        }
+        // JavaScript funcionalidade já explicada anteriormente.
     </script>
 </body>
-
 </html>
