@@ -187,6 +187,7 @@
 
             <div id="loginForm" style="display: none;">
                 <input class="form-input" type="text" id="loginUsername" placeholder="Nome de Usuário" />
+                <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
                 <button class="form-button" onclick="login()">Entrar</button>
             </div>
 
@@ -255,12 +256,14 @@
         // Função de login com nome de usuário
         function login() {
             const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
             const usersRef = database.ref('users');
             usersRef.orderByChild('username').equalTo(username).once('value', snapshot => {
                 if (snapshot.exists()) {
-                    const user = snapshot.val();
-                    const userEmail = Object.values(user)[0].email;
-                    auth.signInWithEmailAndPassword(userEmail, document.getElementById('loginPassword').value)
+                    const userData = snapshot.val();
+                    const userEmail = Object.values(userData)[0].email;
+
+                    auth.signInWithEmailAndPassword(userEmail, password)
                         .then(() => {
                             closeModal();
                             alert('Login bem-sucedido!');
