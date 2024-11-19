@@ -136,8 +136,8 @@
         <h1>AMNP</h1>
         <nav>
             <ul>
-                <li><a href="#">Início</a></li>
-                <li><a href="#">Sobre</a></li>
+                <li><a href="javascript:void(0)" onclick="showPosts()">Início</a></li>
+                <li><a href="javascript:void(0)" onclick="clearSobre()">Sobre</a></li>
                 <li><a href="#">Categorias</a></li>
                 <li><a href="#">Contato</a></li>
             </ul>
@@ -145,21 +145,8 @@
     </header>
 
     <!-- Conteúdo Principal -->
-    <main class="main-content">
-        <section class="posts">
-            <h2>Posts</h2>
-
-            <!-- Formulário de novo post -->
-            <div class="new-post-form">
-                <input type="text" id="postInput" placeholder="Digite algo...">
-                <button onclick="addPost()">Postar</button>
-            </div>
-
-            <!-- Lista de posts -->
-            <div id="postList">
-                <!-- Os posts serão carregados aqui -->
-            </div>
-        </section>
+    <main class="main-content" id="content">
+        <!-- Aqui será carregado o conteúdo dinâmico -->
     </main>
 
     <!-- Rodapé -->
@@ -223,13 +210,32 @@
 
         // Carregar os posts quando a página for carregada
         window.onload = loadPosts;
+
+        // Função para exibir posts ao clicar no botão "Início"
+        function showPosts() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <section class="posts">
+                    <h2>Posts</h2>
+                    <div class="new-post-form">
+                        <input type="text" id="postInput" placeholder="Digite algo...">
+                        <button onclick="addPost()">Postar</button>
+                    </div>
+                    <div id="postList"></div>
+                </section>
+            `;
+            loadPosts(); // Carregar os posts
+        }
+
+        // Função para limpar o conteúdo do botão "Sobre"
+        function clearSobre() {
+            const aboutButton = document.querySelector('nav ul li a[href="javascript:void(0)"][onclick="clearSobre()"]');
+            aboutButton.innerHTML = ""; // Deixa o botão sem palavras
+        }
     </script>
 </body>
 
 </html>
-
-
-
 
 
 
