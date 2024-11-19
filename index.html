@@ -100,6 +100,43 @@
         .delete-button:hover {
             background-color: #cc0000;
         }
+
+        /* Modal de Login e Registro */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -117,30 +154,14 @@
         </nav>
     </header>
 
-    <div id="loginRegisterContainer" style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 5px;">
-        <div id="loginForm" style="display: block;">
-            <h3>Login</h3>
-            <input class="form-input" type="email" id="loginEmail" placeholder="E-mail" />
-            <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
-            <button class="form-button" onclick="login()">Entrar</button>
-            <button class="form-button" onclick="showRegisterForm()">Criar Conta</button>
-        </div>
-
-        <div id="registerForm" style="display: none;">
-            <h3>Registrar</h3>
-            <input class="form-input" type="email" id="registerEmail" placeholder="E-mail" />
-            <input class="form-input" type="password" id="registerPassword" placeholder="Senha" />
-            <button class="form-button" onclick="register()">Registrar</button>
-            <button class="form-button" onclick="showLoginForm()">Voltar</button>
-        </div>
-
-        <button class="form-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
-    </div>
-
     <div class="main-content">
         <div id="content">
             <h2>Bem-vindo ao AMNP!</h2>
             <p>Escolha uma opção no menu para ver mais conteúdo.</p>
+        </div>
+
+        <div id="loginContainer">
+            <button class="form-button" onclick="openModal()">Login / Registrar</button>
         </div>
 
         <div id="postsSection" class="post-section">
@@ -155,6 +176,28 @@
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
+
+    <!-- Modal de Login e Registro -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Escolha uma opção:</h3>
+            <button class="form-button" onclick="showLoginForm()">Login</button>
+            <button class="form-button" onclick="showRegisterForm()">Registrar</button>
+
+            <div id="loginForm" style="display: none;">
+                <input class="form-input" type="email" id="loginEmail" placeholder="E-mail" />
+                <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
+                <button class="form-button" onclick="login()">Entrar</button>
+            </div>
+
+            <div id="registerForm" style="display: none;">
+                <input class="form-input" type="email" id="registerEmail" placeholder="E-mail" />
+                <input class="form-input" type="password" id="registerPassword" placeholder="Senha" />
+                <button class="form-button" onclick="register()">Registrar</button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
@@ -180,14 +223,34 @@
         // Verifica o estado de autenticação do usuário
         auth.onAuthStateChanged((user) => {
             if (user) {
-                document.getElementById('loginRegisterContainer').style.display = 'none';
-                document.getElementById('logoutButton').style.display = 'inline-block';
+                document.getElementById('loginContainer').style.display = 'none';
                 loadPosts();
             } else {
-                document.getElementById('loginRegisterContainer').style.display = 'block';
-                document.getElementById('logoutButton').style.display = 'none';
+                document.getElementById('loginContainer').style.display = 'block';
             }
         });
+
+        // Função para abrir o modal de login/registro
+        function openModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        // Função para fechar o modal
+        function closeModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        // Exibe o formulário de login
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
+
+        // Exibe o formulário de registro
+        function showRegisterForm() {
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+        }
 
         // Função de Login
         function login() {
@@ -195,8 +258,8 @@
             const password = document.getElementById('loginPassword').value;
 
             auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
+                .then(() => {
+                    closeModal();
                     alert('Login bem-sucedido!');
                 })
                 .catch((error) => {
@@ -210,10 +273,9 @@
             const password = document.getElementById('registerPassword').value;
 
             auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    alert('Cadastro realizado com sucesso!');
-                    showLoginForm();
+                .then(() => {
+                    closeModal();
+                    alert('Registro bem-sucedido!');
                 })
                 .catch((error) => {
                     alert('Erro ao registrar: ' + error.message);
@@ -229,43 +291,6 @@
                 .catch((error) => {
                     alert('Erro ao sair: ' + error.message);
                 });
-        }
-
-        // Funções para alternar entre login e registro
-        function showRegisterForm() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-        }
-
-        function showLoginForm() {
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'block';
-        }
-
-        // Função para alternar entre as seções do conteúdo
-        function changeContent(section) {
-            const content = document.getElementById('content');
-            if (section === 'posts' && auth.currentUser) {
-                document.getElementById('postsSection').style.display = 'block';
-            } else {
-                document.getElementById('postsSection').style.display = 'none';
-            }
-        }
-
-        // Função para adicionar um post
-        function addPost() {
-            const postInput = document.getElementById('postInput');
-            if (postInput.value.trim()) {
-                const newPost = {
-                    username: auth.currentUser.email,
-                    content: postInput.value
-                };
-
-                const postsRef = database.ref('posts');
-                postsRef.push(newPost); // Envia para o Firebase
-                postInput.value = ''; // Limpa o campo de entrada
-                loadPosts(); // Atualiza a lista de posts
-            }
         }
 
         // Função para carregar posts
@@ -287,6 +312,22 @@
                     postList.appendChild(postElement);
                 }
             });
+        }
+
+        // Função para adicionar um post
+        function addPost() {
+            const postInput = document.getElementById('postInput');
+            if (postInput.value.trim()) {
+                const newPost = {
+                    username: auth.currentUser.email,
+                    content: postInput.value
+                };
+
+                const postsRef = database.ref('posts');
+                postsRef.push(newPost); // Envia para o Firebase
+                postInput.value = ''; // Limpa o campo de entrada
+                loadPosts(); // Atualiza a lista de posts
+            }
         }
     </script>
 </body>
