@@ -100,12 +100,6 @@
             font-size: 0.9rem;
         }
 
-        /* Estilo do login e registro */
-        .login-form, .register-form {
-            display: none;
-            margin-bottom: 20px;
-        }
-
         .form-input {
             width: 300px;
             padding: 10px;
@@ -129,28 +123,26 @@
             background-color: #0077cc;
         }
 
-        /* Estilo do botão de logout */
-        .logout-button {
-            display: none;
-            background-color: #ff4500;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .logout-button:hover {
-            background-color: #e03e00;
-        }
-
-        /* Exibir nome do usuário logado */
         .logged-in-user {
             font-size: 1.2rem;
             color: #ff9900;
         }
 
-        /* Ajuste de estilo para os links de navegação */
+        .category-button {
+            margin: 10px;
+            font-size: 1rem;
+            background-color: #ff9900;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .category-button:hover {
+            background-color: #ff7f00;
+        }
+
         .nav-active {
             color: #ff9900;
         }
@@ -194,6 +186,13 @@
 
         <!-- Nome do usuário logado -->
         <div class="logged-in-user" id="loggedInUser"></div>
+
+        <!-- Formulário de post na categoria -->
+        <div id="category-post-form" style="display: none;">
+            <input type="text" id="categoryPostInput" class="form-input" placeholder="Digite seu post aqui...">
+            <button class="form-button" onclick="postInCategory()">Postar na Categoria</button>
+            <div id="categoryPosts"></div>
+        </div>
     </div>
 
     <footer>
@@ -259,41 +258,55 @@
             changeContent('inicio'); // Volta para a página inicial
         }
 
-        // Função para alterar o conteúdo com base nos links clicados
+        // Troca o conteúdo da página com base na opção do menu
         function changeContent(page) {
             const content = document.getElementById('content');
-            const links = document.querySelectorAll('nav ul li a');
-            links.forEach(link => link.classList.remove('nav-active')); // Remove a classe de ativo
+            const categoryPostForm = document.getElementById('category-post-form');
 
-            // Marca o link ativo
-            document.getElementById(page + 'Link').classList.add('nav-active');
-
-            // Altera o conteúdo
             if (page === 'inicio') {
                 content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
             } else if (page === 'sobre') {
                 content.innerHTML = "<h2>Sobre nós</h2><p>Informações sobre o site AMNP.</p>";
             } else if (page === 'categorias') {
-                content.innerHTML = "<h2>Categorias</h2><p>Veja as categorias disponíveis.</p>";
+                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria abaixo para começar a postar.</p>";
+                content.innerHTML += "<button class='category-button' onclick='showCategoryForm()'>Postar na Categoria</button>";
             } else if (page === 'contato') {
                 content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
             }
         }
 
-        // Verifica se o usuário está logado ao carregar a página
-        if (localStorage.getItem('username')) {
-            document.querySelector('.logout-button').style.display = 'inline-block';
-            document.querySelector('#loggedInUser').textContent = `Olá, ${localStorage.getItem('username')}!`;
-            changeContent('inicio'); // Exibe a página inicial ao logar
+        // Mostra o formulário de postagem na categoria
+        function showCategoryForm() {
+            document.getElementById('category-post-form').style.display = 'block';
+            const posts = JSON.parse(localStorage.getItem('categoryPosts')) || [];
+            const categoryPostsDiv = document.getElementById('categoryPosts');
+            categoryPostsDiv.innerHTML = '';
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `<h3>${post.username}</h3><p>${post.content}</p>`;
+                categoryPostsDiv.appendChild(postElement);
+            });
+        }
+
+        // Postar na categoria
+        function postInCategory() {
+            const postContent = document.getElementById('categoryPostInput').value;
+            if (postContent && localStorage.getItem('username')) {
+                const posts = JSON.parse(localStorage.getItem('categoryPosts')) || [];
+                posts.push({ username: localStorage.getItem('username'), content: postContent });
+                localStorage.setItem('categoryPosts', JSON.stringify(posts));
+                document.getElementById('categoryPostInput').value = ''; // Limpa o campo
+                showCategoryForm(); // Atualiza os posts
+            } else {
+                alert('Você precisa estar logado para postar!');
+            }
         }
     </script>
+
 </body>
 
 </html>
-
-
-
-
 
 
 
