@@ -206,7 +206,7 @@
 
     <script>
         // Configuração do Firebase
-        const firebaseConfig = {
+       const firebaseConfig = {
             apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
             authDomain: "amnp-af2f0.firebaseapp.com",
             databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
@@ -215,7 +215,6 @@
             messagingSenderId: "468676978607",
             appId: "1:468676978607:web:fe277a7fad97b27b2fb15a"
         };
-
         // Inicialização do Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -257,16 +256,16 @@
         function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
-            const usersRef = database.ref('users');
-            usersRef.orderByChild('username').equalTo(username).once('value', snapshot => {
-                if (snapshot.exists()) {
-                    const userData = snapshot.val();
-                    const userEmail = Object.values(userData)[0].email;
 
+            const usersRef = database.ref('users');
+            usersRef.orderByChild('username').equalTo(username).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const userEmail = snapshot.val()[Object.keys(snapshot.val())[0]].email;
                     auth.signInWithEmailAndPassword(userEmail, password)
                         .then(() => {
                             closeModal();
                             alert('Login bem-sucedido!');
+                            loadPosts();
                         })
                         .catch((error) => {
                             alert('Erro ao fazer login: ' + error.message);
@@ -332,6 +331,14 @@
                 postInput.value = '';
                 loadPosts();
             }
+        }
+
+        // Função para mudar de conteúdo
+        function changeContent(content) {
+            document.getElementById('content').innerHTML = `
+                <h2>${content.charAt(0).toUpperCase() + content.slice(1)}</h2>
+                <p>Conteúdo de ${content}...</p>
+            `;
         }
     </script>
 </body>
