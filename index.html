@@ -5,127 +5,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMNP</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
-            background-repeat: no-repeat;
-            background-size: cover;
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
+   <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+    }
 
-        header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px 0;
-            text-align: center;
-        }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
 
-        header h1 {
-            font-size: 2.5rem;
-        }
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        width: 300px;
+        max-width: 90%;
+    }
 
-        nav ul {
-            list-style: none;
-            padding: 10px 0;
-        }
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-        nav ul li {
-            display: inline;
-            margin: 0 10px;
-        }
+    .form-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-        nav ul li a {
-            text-decoration: none;
-            color: #bbb;
-            font-size: 1.1rem;
-        }
+    .form-button:hover {
+        background-color: #0056b3;
+    }
 
-        nav ul li a:hover {
-            color: #ff9900;
-        }
+    .close {
+        float: right;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+        color: #aaa;
+    }
 
-        .main-content {
-            padding: 20px;
-            text-align: center;
-        }
+    .close:hover {
+        color: #000;
+    }
+</style>
 
-        .form-input,
-        .form-button {
-            padding: 10px;
-            margin: 10px;
-            font-size: 1rem;
-            border-radius: 5px;
-        }
-
-        .form-button {
-            background-color: #1da1f2;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .form-button:hover {
-            background-color: #0077cc;
-        }
-
-        .post {
-            background: rgba(0, 0, 0, 0.8);
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .delete-button {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .delete-button:hover {
-            background-color: #cc0000;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 5px;
-            text-align: center;
-            width: 300px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
@@ -193,25 +137,39 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-        // Configuração Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
-            authDomain: "amnp-af2f0.firebaseapp.com",
-            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "amnp-af2f0",
-            storageBucket: "amnp-af2f0.firebasestorage.app",
-            messagingSenderId: "468676978607",
-            appId: "1:468676978607:web:fe277a7fad97b27b2fb15a",
-            measurementId: "G-VLBG5RE69T"
-        };
+    // Configuração Firebase
+    const firebaseConfig = {
+       apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const database = getDatabase(app);
+  authDomain: "amnp-af2f0.firebaseapp.com",
+
+  databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
+
+  projectId: "amnp-af2f0",
+
+  storageBucket: "amnp-af2f0.firebasestorage.app",
+
+  messagingSenderId: "468676978607",
+
+  appId: "1:468676978607:web:fe277a7fad97b27b2fb15a",
+
+  measurementId: "G-VLBG5RE69T"
+
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // Suas funções continuam aqui...
+</script>
+
+const analytics = getAnalytics(app);
 
         // Função para exibir conteúdo da página
         function changeContent(page) {
