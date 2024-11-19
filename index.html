@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-</body>
-        </script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMNP - Posts e Login</title>
     <style>
         /* Reset básico */
         * {
@@ -157,7 +159,27 @@
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
 
+    <!-- Adicionar Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.8.1/firebase-database.js"></script>
+
     <script>
+        // Configuração do Firebase (substitua com suas credenciais)
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_DOMINIO.firebaseapp.com",
+            projectId: "SEU_PROJETO",
+            storageBucket: "SEU_BUCKET.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID",
+        };
+
+        // Inicializando o Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
         // Função para trocar o conteúdo
         function changeContent(section) {
             const content = document.getElementById('content');
@@ -195,165 +217,78 @@
         // Função para adicionar um post
         function addPost() {
             const postInput = document.getElementById('postInput');
-            if (postInput.value.trim() === '') return;
-
             const postList = document.getElementById('postList');
-            const newPost = {
-                title: "Novo Post",
-                content: postInput.value,
-                author: "Anônimo"
-            };
+            const currentUser = auth.currentUser;
 
-            // Criar o elemento do post
-            const postElement = document.createElement('article');
-            postElement.classList.add('post');
-            postElement.innerHTML = `
-                <h3>${newPost.title}</h3>
-                <p>${newPost.content}</p>
-                <p class="author">Postado por: ${newPost.author}</p>
-            `;
-            
-            postList.prepend(postElement);
-            postInput.value = ''; // Limpar o campo de texto
-        }
+            if (postInput.value.trim() !== '') {
+                const newPost = {
+                    title: "Novo Post",
+                    content: postInput.value,
+                    username: currentUser ? currentUser.displayName : "Anônimo"
+                };
 
-        // Função para carregar posts (Simulando carregamento de posts)
-        function loadPosts() {
-            const postList = document.getElementById('postList');
-            const posts = [
-                { title: "Primeiro Post", content: "Este é o primeiro post!", author: "Anônimo" },
-                { title: "Segundo Post", content: "Outro post legal por aqui.", author: "Anônimo" }
-            ];
-
-            posts.forEach(post => {
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${post.title}</h3>
-                    <p>${post.content}</p>
-                    <p class="author">Postado por: ${post.author}</p>
-                `;
-                postList.appendChild(postElement);
-            });
-        }
-
-        // Função de login simulada (Não necessária mais para postar)
-        function loginUser() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if (username && password) {
-                alert(`Bem-vindo, ${username}! Login realizado com sucesso.`);
-                changeContent('inicio');
-            } else {
-                alert('Por favor, preencha ambos os campos!');
+                // Salvar o post no Realtime Database
+                db.ref('posts').push(newPost)
+                    .then(() => {
+                        // Adicionar o post à página
+                        const postElement = document.createElement('article');
+                        postElement.classList.add('post');
+                        postElement.innerHTML = `
+                            <h3>${newPost.title}</h3>
+                            <p>${newPost.content}</p>
+                            <small>Por: ${newPost.username}</small>
+                        `;
+                        postList.prepend(postElement);
+                        postInput.value = ''; // Limpar o campo de texto
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao salvar post:", error);
+                    });
             }
         }
 
-        // Função para exibir o formulário de registro (não necessária mais)
+        // Função para carregar posts do Firebase
+        function loadPosts() {
+            const postList = document.getElementById('postList');
+
+            // Escutando alterações no nó "posts" do Firebase
+            db.ref('posts').on('value', (snapshot) => {
+                postList.innerHTML = ''; // Limpar os posts anteriores
+
+                // Iterar sobre os posts armazenados no Firebase
+                snapshot.forEach((childSnapshot) => {
+                    const post = childSnapshot.val();
+                    const postElement = document.createElement('article');
+                    postElement.classList.add('post');
+                    postElement.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>Por: ${post.username}</small>
+                    `;
+                    postList.appendChild(postElement);
+                });
+            });
+        }
+
+        // Função de login
+        function loginUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            auth.signInWithEmailAndPassword(username + "@example.com", password)
+                .then(() => {
+                    alert('Login realizado com sucesso!');
+                    changeContent('inicio');
+                })
+                .catch((error) => {
+                    alert('Erro ao logar: ' + error.message);
+                });
+        }
+
+        // Função para exibir o formulário de registro
         function showRegister() {
             alert("Cadastro não implementado.");
         }
-        function registerUser() {
-    const username = document.getElementById('newUsername').value;
-    const password = document.getElementById('newPassword').value;
-
-    // Criar um novo usuário com email e senha
-    auth.createUserWithEmailAndPassword(username + "@example.com", password)
-        .then((userCredential) => {
-            // Salvar o nome de usuário no Realtime Database
-            const user = userCredential.user;
-            db.ref('users/' + user.uid).set({
-                username: username
-            });
-
-            alert('Cadastro realizado com sucesso!');
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert('Erro ao cadastrar: ' + errorMessage);
-        });
-}
-        function loginUser() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    // Login com email e senha (o e-mail será composto com o nome de usuário)
-    auth.signInWithEmailAndPassword(username + "@example.com", password)
-        .then((userCredential) => {
-            // Usuário logado com sucesso
-            alert('Login realizado com sucesso!');
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert('Erro ao logar: ' + errorMessage);
-        });
-}
-function addPost() {
-    const postInput = document.getElementById('postInput');
-    const postList = document.getElementById('postList');
-    const currentUser = auth.currentUser; // Verifica se o usuário está logado
-
-    if (postInput.value.trim() !== '') {
-        const newPost = {
-            title: "Novo Post",
-            content: postInput.value,
-            username: currentUser ? currentUser.displayName : "Anônimo"
-        };
-
-        // Salvar o post no Realtime Database
-        db.ref('posts').push(newPost)
-            .then(() => {
-                // Adicionar o post à página
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${newPost.title}</h3>
-                    <p>${newPost.content}</p>
-                    <small>Por: ${newPost.username}</small>
-                `;
-                postList.prepend(postElement);
-
-                postInput.value = ''; // Limpar o campo de texto
-            })
-            .catch((error) => {
-                console.error("Erro ao salvar post:", error);
-            });
-    }
-}
-function loadPosts() {
-    const postList = document.getElementById('postList');
-
-    // Escutando alterações no nó "posts" do Firebase
-    db.ref('posts').on('value', (snapshot) => {
-        postList.innerHTML = ''; // Limpar os posts anteriores
-
-        // Iterar sobre os posts armazenados no Firebase
-        snapshot.forEach((childSnapshot) => {
-            const post = childSnapshot.val();
-
-            const postElement = document.createElement('article');
-            postElement.classList.add('post');
-            postElement.innerHTML = `
-                <h3>${post.title}</h3>
-                <p>${post.content}</p>
-                <small>Por: ${post.username}</small>
-            `;
-
-            postList.appendChild(postElement);
-        });
-    });
-}
-        
-window.onload = function() {
-    loadPosts(); // Carregar posts
-
-
-
-</html>
-
-
     </script>
 </body>
 </html>
