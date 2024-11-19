@@ -137,7 +137,7 @@
         <nav>
             <ul>
                 <li><a href="javascript:void(0)" onclick="showPosts()">Início</a></li>
-                <li><a href="javascript:void(0)" onclick="clearSobre()">Sobre</a></li>
+                <li><a href="javascript:void(0)" onclick="changeSobre()">Sobre</a></li>
                 <li><a href="#">Categorias</a></li>
                 <li><a href="#">Contato</a></li>
             </ul>
@@ -227,15 +227,16 @@
             loadPosts(); // Carregar os posts
         }
 
-        // Função para limpar o conteúdo do botão "Sobre"
-        function clearSobre() {
-            const aboutButton = document.querySelector('nav ul li a[href="javascript:void(0)"][onclick="clearSobre()"]');
-            aboutButton.innerHTML = ""; // Deixa o botão sem palavras
+        // Função para mudar o texto do botão "Sobre"
+        function changeSobre() {
+            const aboutButton = document.querySelector('nav ul li a[href="javascript:void(0)"][onclick="changeSobre()"]');
+            aboutButton.innerHTML = "Você clicou em Sobre!"; // Alterando o texto do botão
         }
     </script>
 </body>
 
 </html>
+
 
 
 
