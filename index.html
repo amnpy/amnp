@@ -6,35 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMNP</title>
     <style>
-        /* Reset básico */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Estilos de layout */
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
             background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
             background-repeat: no-repeat;
-            background-attachment: fixed;
             background-size: cover;
+            color: #fff;
+            margin: 0;
+            padding: 0;
         }
 
         header {
             background: rgba(0, 0, 0, 0.7);
             padding: 20px 0;
-            border-bottom: 1px solid #444;
+            text-align: center;
         }
 
         header h1 {
             font-size: 2.5rem;
-            color: #fff;
+            color: white;
         }
 
         nav ul {
@@ -50,7 +41,7 @@
         nav ul li a {
             text-decoration: none;
             color: #bbb;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         nav ul li a:hover {
@@ -58,64 +49,31 @@
         }
 
         .main-content {
-            background: rgba(0, 0, 0, 0.8);
             padding: 20px;
-            margin: 20px auto;
-            border-radius: 5px;
-            max-width: 800px;
-            text-align: left;
+            text-align: center;
         }
 
-        .posts h2 {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #ff9900;
-            transform: rotate(-5deg);
-            display: inline-block;
-        }
-
-        .post {
-            margin-bottom: 20px;
-        }
-
-        .post h3 {
-            color: #ff9900;
-        }
-
-        .post p {
-            margin: 10px 0;
-            font-size: 1rem;
+        .post-section {
+            display: none;
         }
 
         footer {
             text-align: center;
             padding: 20px 0;
-            margin-top: 20px;
             background: rgba(0, 0, 0, 0.7);
-            border-top: 1px solid #444;
-            color: #bbb;
         }
 
-        footer p {
-            font-size: 0.9rem;
-        }
-
-        .form-input {
-            width: 200px;
-            padding: 8px;
-            margin: 5px;
+        .form-input, .form-button {
+            padding: 10px;
+            margin: 10px;
             font-size: 1rem;
-            border: 1px solid #ddd;
             border-radius: 5px;
         }
 
         .form-button {
-            padding: 8px 15px;
-            font-size: 1rem;
             background-color: #1da1f2;
             color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
         }
 
@@ -123,62 +81,11 @@
             background-color: #0077cc;
         }
 
-        .logged-in-user {
-            font-size: 1.2rem;
-            color: #ff9900;
-        }
-
-        .category-button {
-            margin: 10px;
-            font-size: 1rem;
-            background-color: #ff9900;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .category-button:hover {
-            background-color: #ff7f00;
-        }
-
-        /* Login e registro no canto superior direito */
-        .login-register-container {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        .login-form, .register-form {
-            margin: 5px;
-            text-align: center;
-        }
-
-        .login-register-container input {
-            margin: 5px;
-        }
-
-        .logout-button {
-            padding: 10px;
-            background-color: #ff9900;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .logout-button:hover {
-            background-color: #ff7f00;
-        }
-
-        /* Estilo da seção de posts */
-        .post-section {
-            display: none;
+        .post {
+            background: rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
         }
 
         .delete-button {
@@ -201,55 +108,45 @@
         <h1>AMNP</h1>
         <nav>
             <ul>
-                <li><a href="#" onclick="changeContent('inicio')" id="inicioLink">Início</a></li>
-                <li><a href="#" onclick="changeContent('sobre')" id="sobreLink">Sobre</a></li>
-                <li><a href="#" onclick="changeContent('categorias')" id="categoriasLink">Categorias</a></li>
-                <li><a href="#" onclick="changeContent('contato')" id="contatoLink">Contato</a></li>
-                <li><a href="#" onclick="changeContent('posts')" id="postsLink">Posts</a></li>
+                <li><a href="#" onclick="changeContent('inicio')">Início</a></li>
+                <li><a href="#" onclick="changeContent('sobre')">Sobre</a></li>
+                <li><a href="#" onclick="changeContent('categorias')">Categorias</a></li>
+                <li><a href="#" onclick="changeContent('contato')">Contato</a></li>
+                <li><a href="#" onclick="changeContent('posts')">Posts</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Login e Registro no canto superior direito -->
-    <div class="login-register-container" id="loginRegisterContainer">
-        <!-- Formulário de login -->
-        <div class="login-form" id="loginForm" style="display: none;">
+    <div id="loginRegisterContainer" style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 5px;">
+        <div id="loginForm" style="display: none;">
             <h3>Login</h3>
             <input class="form-input" type="text" id="loginUsername" placeholder="Usuário" />
             <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
             <button class="form-button" onclick="login()">Entrar</button>
         </div>
 
-        <!-- Formulário de registro -->
-        <div class="register-form" id="registerForm" style="display: none;">
+        <div id="registerForm" style="display: none;">
             <h3>Registrar</h3>
             <input class="form-input" type="text" id="registerUsername" placeholder="Novo Usuário" />
             <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
             <button class="form-button" onclick="register()">Registrar</button>
         </div>
 
-        <!-- Botão de logout -->
-        <button class="logout-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
+        <button class="form-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
     </div>
 
-    <!-- Seção de Conteúdo -->
     <div class="main-content">
         <div id="content">
             <h2>Bem-vindo ao AMNP!</h2>
             <p>Escolha uma opção no menu para ver mais conteúdo.</p>
         </div>
 
-        <!-- Seção de Posts -->
         <div id="postsSection" class="post-section">
             <h2>Poste algo novo</h2>
-            <div class="new-post-form">
-                <input type="text" id="postInput" placeholder="Digite algo..." class="form-input">
-                <button class="form-button" onclick="addPost()">Postar</button>
-            </div>
+            <input class="form-input" type="text" id="postInput" placeholder="Digite algo..." />
+            <button class="form-button" onclick="addPost()">Postar</button>
 
-            <div id="postList">
-                <!-- Os posts serão carregados aqui -->
-            </div>
+            <div id="postList"></div>
         </div>
     </div>
 
@@ -257,30 +154,24 @@
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
 
-    <script>
-        // Função para mostrar conteúdo baseado no menu
-        function changeContent(page) {
-            const content = document.getElementById('content');
-            const postsSection = document.getElementById('postsSection');
-            if (page === 'inicio') {
-                content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'sobre') {
-                content.innerHTML = "<h2>Sobre</h2><p>Este é um site de exemplo para demonstrar funcionalidades de posts.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'categorias') {
-                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria para ver posts.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'contato') {
-                content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'posts') {
-                content.innerHTML = "<h2>Poste algo novo</h2>";
-                postsSection.style.display = 'block'; // Exibe a seção de posts
-            }
-        }
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 
-        // Função de login
+    <script>
+        const firebaseConfig = {
+            apiKey: "468676978607",
+            authDomain: "amnp-af2f0.firebaseapp.com",
+            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app/",
+            projectId: "468676978607",
+            storageBucket: "468676978607.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Função de Login
         function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
@@ -290,28 +181,28 @@
                 document.getElementById('logoutButton').style.display = 'inline-block';
                 alert('Login bem-sucedido!');
                 document.getElementById('loginRegisterContainer').style.display = 'none';
-                loadPosts(); // Carregar posts armazenados
+                loadPosts(); // Carregar posts
             } else {
-                alert('Por favor, preencha todos os campos.');
+                alert('Preencha todos os campos.');
             }
         }
 
-        // Função de registro
+        // Função de Registro
         function register() {
             const username = document.getElementById('registerUsername').value;
             const password = document.getElementById('registerPassword').value;
 
             if (username && password) {
                 localStorage.setItem('username', username);
-                alert('Cadastro bem-sucedido! Agora, você pode fazer login.');
+                alert('Cadastro realizado com sucesso!');
                 document.getElementById('registerForm').style.display = 'none';
                 document.getElementById('loginForm').style.display = 'block';
             } else {
-                alert('Por favor, preencha todos os campos.');
+                alert('Preencha todos os campos.');
             }
         }
 
-        // Função de logout
+        // Função de Logout
         function logout() {
             localStorage.removeItem('username');
             document.getElementById('logoutButton').style.display = 'none';
@@ -325,217 +216,28 @@
             const postList = document.getElementById('postList');
 
             if (postInput.value.trim() !== '') {
-                const newPost = document.createElement('article');
-                newPost.classList.add('post');
-                newPost.innerHTML = `
-                    <h3>${localStorage.getItem('username') || 'Anônimo'}</h3>
-                    <p>${postInput.value}</p>
-                `;
-                postList.prepend(newPost);
-
-                // Salvar post no localStorage
-                savePost(postInput.value);
-                postInput.value = ''; // Limpa o campo
-            }
-        }
-
-        // Função para salvar o post no localStorage
-        function savePost(postContent) {
-            let posts = JSON.parse(localStorage.getItem('posts')) || [];
-            posts.push({
-                username: localStorage.getItem('username') || 'Anônimo',
-                content: postContent
-            });
-            localStorage.setItem('posts', JSON.stringify(posts));
-        }
-
-        // Função para carregar posts
-        function loadPosts() {
-            const postList = document.getElementById('postList');
-            const posts = JSON.parse(localStorage.getItem('posts')) || [];
-            postList.innerHTML = ''; // Limpa a lista de posts
-
-            posts.forEach(post => {
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${post.username}</h3>
-                    <p>${post.content}</p>
-                `;
-                postList.prepend(postElement);
-            });
-        }
-
-        // Carregar posts quando a página carregar
-        window.onload = function () {
-            loadPosts(); // Carregar posts
-            if (localStorage.getItem('username')) {
-                document.getElementById('logoutButton').style.display = 'inline-block';
-                document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
-            } else {
-                document.getElementById('loginRegisterContainer').style.display = 'block';
-            }
-        }
-    </script>
-</body>
-
-</html>
-
-
-
-
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMNP</title>
-    <style>
-        /* Estilos de layout */
-    </style>
-</head>
-
-<body>
-    <!-- Cabeçalho e navegação -->
-    <header>
-        <h1>AMNP</h1>
-        <nav>
-            <ul>
-                <li><a href="#" onclick="changeContent('inicio')" id="inicioLink">Início</a></li>
-                <li><a href="#" onclick="changeContent('sobre')" id="sobreLink">Sobre</a></li>
-                <li><a href="#" onclick="changeContent('categorias')" id="categoriasLink">Categorias</a></li>
-                <li><a href="#" onclick="changeContent('contato')" id="contatoLink">Contato</a></li>
-                <li><a href="#" onclick="changeContent('posts')" id="postsLink">Posts</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Login e registro -->
-    <div class="login-register-container" id="loginRegisterContainer">
-        <div class="login-form" id="loginForm" style="display: none;">
-            <h3>Login</h3>
-            <input class="form-input" type="text" id="loginUsername" placeholder="Usuário" />
-            <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
-            <button class="form-button" onclick="login()">Entrar</button>
-        </div>
-
-        <div class="register-form" id="registerForm" style="display: none;">
-            <h3>Registrar</h3>
-            <input class="form-input" type="text" id="registerUsername" placeholder="Novo Usuário" />
-            <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
-            <button class="form-button" onclick="register()">Registrar</button>
-        </div>
-
-        <button class="logout-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
-    </div>
-
-    <!-- Seção de Posts -->
-    <div class="main-content">
-        <div id="content">
-            <h2>Bem-vindo ao AMNP!</h2>
-            <p>Escolha uma opção no menu para ver mais conteúdo.</p>
-        </div>
-
-        <!-- Formulário de posts -->
-        <div id="postsSection" class="post-section">
-            <h2>Poste algo novo</h2>
-            <div class="new-post-form">
-                <input type="text" id="postInput" placeholder="Digite algo..." class="form-input">
-                <button class="form-button" onclick="addPost()">Postar</button>
-            </div>
-
-            <div id="postList">
-                <!-- Os posts serão carregados aqui -->
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
-    </footer>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-
-    <script>
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "468676978607",
-            authDomain: "amnp-af2f0.firebaseapp.com",
-            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app/",
-            projectId: "468676978607",
-            storageBucket: "468676978607.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Inicializando o Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Função para adicionar posts
-        function addPost() {
-            const postInput = document.getElementById('postInput');
-            const postList = document.getElementById('postList');
-
-            if (postInput.value.trim() !== '') {
                 const newPost = {
                     username: localStorage.getItem('username') || 'Anônimo',
                     content: postInput.value
                 };
 
-                // Enviar post para o Firebase
                 const postsRef = database.ref('posts');
-                postsRef.push(newPost);
-
-                // Exibir o novo post
-                displayPost(newPost);
-
-                postInput.value = ''; // Limpa o campo
+                postsRef.push(newPost); // Envia para o Firebase
+                postInput.value = ''; // Limpa o campo de entrada
             }
         }
 
-        // Exibir posts na tela
-        function displayPost(post) {
-            const postList = document.getElementById('postList');
-            const postElement = document.createElement('article');
-            postElement.classList.add('post');
-            postElement.innerHTML = `
-                <h3>${post.username}</h3>
-                <p>${post.content}</p>
-            `;
-            postList.prepend(postElement);
-        }
-
-        // Carregar posts do Firebase
+        // Função para exibir posts
         function loadPosts() {
             const postList = document.getElementById('postList');
             const postsRef = database.ref('posts');
             postsRef.once('value', snapshot => {
                 const posts = snapshot.val();
-                postList.innerHTML = ''; // Limpa a lista de posts
+                postList.innerHTML = ''; // Limpa os posts
 
-                // Exibe todos os posts
                 for (const id in posts) {
                     const post = posts[id];
-                    displayPost(post);
-                }
-            });
-        }
-
-        // Carregar posts quando a página carregar
-        window.onload = function () {
-            loadPosts(); // Carregar posts
-            if (localStorage.getItem('username')) {
-                document.getElementById('logoutButton').style.display = 'inline-block';
-                document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
-            } else {
-                document.getElementById('loginRegisterContainer').style.display = 'block';
-            }
-        }
-    </script>
-</body>
-
-</html>
+                    const postElement = document.createElement('div');
+                    postElement.classList.add('post');
+                    postElement.innerHTML = `
+                        <h3>${
