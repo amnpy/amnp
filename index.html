@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMNP</title>
     <style>
-        /* Estilos de layout */
+        /* Estilos gerais */
         body {
             font-family: Arial, sans-serif;
             background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
             background-repeat: no-repeat;
             background-size: cover;
-            color: #fff;
+            color: white;
             margin: 0;
             padding: 0;
         }
@@ -25,7 +25,6 @@
 
         header h1 {
             font-size: 2.5rem;
-            color: white;
         }
 
         nav ul {
@@ -186,13 +185,12 @@
             <button class="form-button" onclick="showRegisterForm()">Registrar</button>
 
             <div id="loginForm" style="display: none;">
-                <input class="form-input" type="text" id="loginUsername" placeholder="Nome de Usuário" />
+                <input class="form-input" type="email" id="loginEmail" placeholder="E-mail" />
                 <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
                 <button class="form-button" onclick="login()">Entrar</button>
             </div>
 
             <div id="registerForm" style="display: none;">
-                <input class="form-input" type="text" id="registerUsername" placeholder="Nome de Usuário" />
                 <input class="form-input" type="email" id="registerEmail" placeholder="E-mail" />
                 <input class="form-input" type="password" id="registerPassword" placeholder="Senha" />
                 <button class="form-button" onclick="register()">Registrar</button>
@@ -222,30 +220,38 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
-        // Verifica o estado de autenticação do usuário
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('loginContainer').style.display = 'none';
+        // Função para exibir conteúdo da página
+        function changeContent(page) {
+            const content = document.getElementById("content");
+            if (page === "inicio") {
+                content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
+            } else if (page === "sobre") {
+                content.innerHTML = "<h2>Sobre</h2><p>Informações sobre o AMNP.</p>";
+            } else if (page === "categorias") {
+                content.innerHTML = "<h2>Categorias</h2><p>Exploração de categorias.</p>";
+            } else if (page === "contato") {
+                content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
+            } else if (page === "posts") {
+                content.innerHTML = "<h2>Posts</h2><p>Veja os posts mais recentes.</p>";
+                document.getElementById("postsSection").style.display = "block";
                 loadPosts();
-            } else {
-                document.getElementById('loginContainer').style.display = 'block';
             }
-        });
+        }
 
-        // Função para abrir o modal de login/registro
+        // Abrir o modal de login/registro
         function openModal() {
             document.getElementById('loginModal').style.display = 'flex';
         }
 
-        // Função para fechar o modal
+        // Fechar o modal
         function closeModal() {
             document.getElementById('loginModal').style.display = 'none';
         }
 
         // Exibe o formulário de login
         function showLoginForm() {
-            document.getElementById('loginForm').style.display = 'block';
             document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
         }
 
         // Exibe o formulário de registro
@@ -256,10 +262,10 @@
 
         // Função de login
         function login() {
-            const username = document.getElementById('loginUsername').value;
+            const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
-            signInWithEmailAndPassword(auth, username, password)
+            signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
                     closeModal();
                 })
@@ -270,18 +276,11 @@
 
         // Função de registro
         function register() {
-            const username = document.getElementById('registerUsername').value;
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    const user = userCredential.user;
-                    const userRef = ref(database, 'users/' + user.uid);
-                    set(userRef, {
-                        username: username,
-                        email: email
-                    });
                     closeModal();
                 })
                 .catch((error) => {
@@ -301,6 +300,7 @@
                     createdAt: new Date().toISOString()
                 });
                 postInput.value = '';
+                loadPosts();
             }
         }
 
