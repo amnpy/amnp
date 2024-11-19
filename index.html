@@ -72,26 +72,19 @@
             color: #ff9900;
             transform: rotate(-5deg);
             display: inline-block;
-            border-bottom: 2px solid #ff9900;
-            padding-bottom: 10px;
         }
 
         .post {
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #444;
         }
 
         .post h3 {
             color: #ff9900;
-            margin-left: 10px;
         }
 
         .post p {
             margin: 10px 0;
             font-size: 1rem;
-            text-align: left;
-            margin-left: 10px;
         }
 
         footer {
@@ -107,73 +100,47 @@
             font-size: 0.9rem;
         }
 
-        /* Estilo para o formulário de login */
-        .login-form {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 5px;
-            width: 300px;
-            margin-top: 20px;
-            margin-left: auto;
-            margin-right: auto;
+        .login-form, .register-form {
+            display: none;
+            margin-bottom: 20px;
         }
 
-        .login-form input {
-            width: 100%;
+        .form-input {
+            width: 300px;
             padding: 10px;
-            margin-bottom: 10px;
+            margin: 10px;
             font-size: 1rem;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
 
-        .login-form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #1da1f2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .login-form button:hover {
-            background-color: #0077cc;
-        }
-
-        .login-form p {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        /* Estilo do botão de postar */
-        .post-button {
-            padding: 12px 20px;
-            background-color: #1da1f2;
-            color: white;
-            border: none;
-            border-radius: 5px;
+        .form-button {
+            padding: 10px 20px;
             font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .post-button:hover {
-            background-color: #0077cc;
-        }
-
-        .delete-button {
-            background-color: red;
+            background-color: #1da1f2;
             color: white;
             border: none;
             border-radius: 5px;
-            padding: 10px;
             cursor: pointer;
         }
 
-        .delete-button:hover {
-            background-color: darkred;
+        .form-button:hover {
+            background-color: #0077cc;
+        }
+
+        /* Estilo do botão de logout */
+        .logout-button {
+            display: none;
+            background-color: #ff4500;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #e03e00;
         }
     </style>
 </head>
@@ -183,158 +150,112 @@
         <h1>AMNP</h1>
         <nav>
             <ul>
-                <li><a href="javascript:void(0)" onclick="showPosts()">Início</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToSobre()">Sobre</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToCategorias()">Categorias</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToContato()">Contato</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToLogin()">Login</a></li>
-                <li><a href="javascript:void(0)" id="logoutBtn" style="display:none" onclick="logout()">Sair</a></li>
+                <li><a href="#" onclick="toggleForm('login')">Login</a></li>
+                <li><a href="#" onclick="toggleForm('register')">Registrar</a></li>
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Categorias</a></li>
+                <li><a href="#">Contato</a></li>
             </ul>
         </nav>
     </header>
 
-    <main class="main-content" id="content">
+    <div class="main-content">
+        <!-- Formulários de login e registro -->
+        <div class="login-form">
+            <h2>Login</h2>
+            <input class="form-input" type="text" id="loginUsername" placeholder="Usuário" />
+            <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
+            <button class="form-button" onclick="login()">Entrar</button>
+        </div>
+
+        <div class="register-form">
+            <h2>Registrar</h2>
+            <input class="form-input" type="text" id="registerUsername" placeholder="Novo Usuário" />
+            <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
+            <button class="form-button" onclick="register()">Registrar</button>
+        </div>
+
+        <!-- Posts -->
         <section class="posts">
             <h2>Posts</h2>
-
-            <!-- Formulário de novo post -->
-            <div class="new-post-form">
-                <input type="text" id="postInput" placeholder="Digite algo...">
-                <button class="post-button" onclick="addPost()">Postar</button>
+            <div id="postList">
+                <article class="post">
+                    <h3>Primeiro Post</h3>
+                    <p>P:.</p>
+                </article>
+                <article class="post">
+                    <h3>Segundo Post</h3>
+                    <p>A VIDA SEMPRE DECIDE.</p>
+                </article>
             </div>
-
-            <!-- Lista de posts -->
-            <div id="postList"></div>
         </section>
-    </main>
+    </div>
 
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
+        <button class="logout-button" onclick="logout()">Sair</button>
     </footer>
 
     <script>
-        let currentUser = null;
-
-        function loadPosts() {
-            const postList = document.getElementById('postList');
-            const posts = JSON.parse(localStorage.getItem('posts')) || [];
-            postList.innerHTML = '';
-
-            posts.forEach(post => {
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${post.username}</h3>
-                    <p>${post.content}</p>
-                `;
-                postList.appendChild(postElement);
-            });
-        }
-
-        function addPost() {
-            const postInput = document.getElementById('postInput');
-            const postList = document.getElementById('postList');
-
-            if (postInput.value.trim() !== '') {
-                const newPost = {
-                    username: currentUser,
-                    content: postInput.value
-                };
-
-                let posts = JSON.parse(localStorage.getItem('posts')) || [];
-                posts.unshift(newPost);
-                localStorage.setItem('posts', JSON.stringify(posts));
-
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${newPost.username}</h3>
-                    <p>${newPost.content}</p>
-                `;
-                postList.prepend(postElement);
-                postInput.value = '';
+        function toggleForm(form) {
+            // Esconde todos os formulários
+            document.querySelector('.login-form').style.display = 'none';
+            document.querySelector('.register-form').style.display = 'none';
+            
+            // Exibe o formulário solicitado
+            if (form === 'login') {
+                document.querySelector('.login-form').style.display = 'block';
+            } else if (form === 'register') {
+                document.querySelector('.register-form').style.display = 'block';
             }
         }
 
-        function changeToLogin() {
-            document.getElementById('content').innerHTML = `
-                <h2>Login</h2>
-                <div class="login-form">
-                    <h3>Entrar na sua conta</h3>
-                    <input type="text" id="username" placeholder="Usuário">
-                    <input type="password" id="password" placeholder="Senha">
-                    <button onclick="loginUser()">Entrar</button>
-                    <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegister()">Cadastre-se</a></p>
-                </div>
-            `;
-        }
-
-        function showRegister() {
-            document.getElementById('content').innerHTML = `
-                <h2>Cadastro</h2>
-                <div class="login-form">
-                    <h3>Criar uma conta</h3>
-                    <input type="text" id="newUsername" placeholder="Novo Usuário">
-                    <input type="password" id="newPassword" placeholder="Nova Senha">
-                    <button onclick="registerUser()">Cadastrar</button>
-                </div>
-            `;
-        }
-
-        function registerUser() {
-            const newUsername = document.getElementById('newUsername').value;
-            const newPassword = document.getElementById('newPassword').value;
-
-            if (newUsername && newPassword) {
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                users.push({ username: newUsername, password: newPassword });
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('Cadastro realizado com sucesso!');
-                changeToLogin();
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            if (username && password) {
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
+                alert('Usuário registrado com sucesso!');
+                toggleForm('login');
             } else {
-                alert('Preencha todos os campos!');
+                alert('Por favor, preencha os campos!');
             }
         }
 
-        function loginUser() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
 
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(user => user.username === username && user.password === password);
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
 
-            if (user) {
-                currentUser = username;
-                document.getElementById('content').innerHTML = `
-                    <h2>Bem-vindo, ${currentUser}</h2>
-                    <button onclick="logout()">Sair</button>
-                `;
-                loadPosts();
-                document.getElementById('logoutBtn').style.display = 'inline-block';
+            if (username === storedUsername && password === storedPassword) {
+                alert('Login bem-sucedido!');
+                document.querySelector('.logout-button').style.display = 'inline-block';
+                document.querySelector('.login-form').style.display = 'none';
             } else {
-                alert('Usuário ou senha inválidos');
+                alert('Credenciais incorretas!');
             }
         }
 
         function logout() {
-            currentUser = null;
-            document.getElementById('content').innerHTML = '';
-            document.getElementById('logoutBtn').style.display = 'none';
-            alert('Você saiu da sua conta!');
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+            alert('Você saiu!');
+            document.querySelector('.logout-button').style.display = 'none';
         }
 
-        // Load posts on page load
-        loadPosts();
+        // Verifica se o usuário está logado ao carregar a página
+        if (localStorage.getItem('username')) {
+            document.querySelector('.logout-button').style.display = 'inline-block';
+        }
     </script>
 </body>
 
 </html>
-
-
-
-
-
-
 
 
 
