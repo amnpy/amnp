@@ -70,16 +70,16 @@
             margin-bottom: 20px;
             font-size: 1.8rem;
             color: #ff9900;
-            transform: rotate(-5deg); /* Inclinação de esquerda para direita */
+            transform: rotate(-5deg);
             display: inline-block;
-            border-bottom: 2px solid #ff9900; /* Linha abaixo do título */
+            border-bottom: 2px solid #ff9900;
             padding-bottom: 10px;
         }
 
         .post {
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #444; /* Linha abaixo de cada post */
+            border-bottom: 2px solid #444;
         }
 
         .post h3 {
@@ -90,8 +90,8 @@
         .post p {
             margin: 10px 0;
             font-size: 1rem;
-            text-align: left; /* Alinha o texto do conteúdo à esquerda */
-            margin-left: 10px; /* Adiciona um espaço da borda */
+            text-align: left;
+            margin-left: 10px;
         }
 
         footer {
@@ -179,7 +179,6 @@
 </head>
 
 <body>
-    <!-- Cabeçalho -->
     <header>
         <h1>AMNP</h1>
         <nav>
@@ -188,14 +187,13 @@
                 <li><a href="javascript:void(0)" onclick="changeToSobre()">Sobre</a></li>
                 <li><a href="javascript:void(0)" onclick="changeToCategorias()">Categorias</a></li>
                 <li><a href="javascript:void(0)" onclick="changeToContato()">Contato</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToLogin()">Login</a></li> <!-- Novo item para Login -->
+                <li><a href="javascript:void(0)" onclick="changeToLogin()">Login</a></li>
+                <li><a href="javascript:void(0)" id="logoutBtn" style="display:none" onclick="logout()">Sair</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Conteúdo Principal -->
     <main class="main-content" id="content">
-        <!-- Aqui será carregado o conteúdo dinâmico -->
         <section class="posts">
             <h2>Posts</h2>
 
@@ -210,71 +208,54 @@
         </section>
     </main>
 
-    <!-- Rodapé -->
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Script JavaScript -->
     <script>
-        let currentUser = null;  // Variável para armazenar o usuário logado temporariamente
+        let currentUser = null;
 
-        // Função para adicionar um novo post
-        function addPost() {
-            const postInput = document.getElementById('postInput');
-            const postList = document.getElementById('postList');
-
-            if (postInput.value.trim() !== '') {
-                const newPost = {
-                    title: "Novo Post",
-                    content: postInput.value
-                };
-
-                // Carregar os posts existentes do localStorage ou criar um novo array
-                let posts = JSON.parse(localStorage.getItem('posts')) || [];
-
-                // Adicionar o novo post ao array
-                posts.unshift(newPost); // Adiciona no início da lista
-
-                // Salvar os posts atualizados no localStorage
-                localStorage.setItem('posts', JSON.stringify(posts));
-
-                // Criar o elemento do post
-                const postElement = document.createElement('article');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${newPost.title}</h3>
-                    <p>${newPost.content}</p>
-                `;
-                
-                // Adicionar o novo post na lista de posts
-                postList.prepend(postElement);
-                
-                postInput.value = ''; // Limpar o campo de texto
-            }
-        }
-
-        // Função para carregar os posts do localStorage ao carregar a página
         function loadPosts() {
             const postList = document.getElementById('postList');
-            const posts = JSON.parse(localStorage.getItem('posts')) || []; // Carregar ou criar array vazio
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            postList.innerHTML = '';
 
-            // Adicionar cada post ao DOM
             posts.forEach(post => {
                 const postElement = document.createElement('article');
                 postElement.classList.add('post');
                 postElement.innerHTML = `
-                    <h3>${post.title}</h3>
+                    <h3>${post.username}</h3>
                     <p>${post.content}</p>
                 `;
                 postList.appendChild(postElement);
             });
         }
 
-        // Carregar os posts quando a página for carregada
-        window.onload = loadPosts;
+        function addPost() {
+            const postInput = document.getElementById('postInput');
+            const postList = document.getElementById('postList');
 
-        // Função para mostrar a página de login
+            if (postInput.value.trim() !== '') {
+                const newPost = {
+                    username: currentUser,
+                    content: postInput.value
+                };
+
+                let posts = JSON.parse(localStorage.getItem('posts')) || [];
+                posts.unshift(newPost);
+                localStorage.setItem('posts', JSON.stringify(posts));
+
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${newPost.username}</h3>
+                    <p>${newPost.content}</p>
+                `;
+                postList.prepend(postElement);
+                postInput.value = '';
+            }
+        }
+
         function changeToLogin() {
             document.getElementById('content').innerHTML = `
                 <h2>Login</h2>
@@ -288,7 +269,6 @@
             `;
         }
 
-        // Função para exibir o formulário de registro
         function showRegister() {
             document.getElementById('content').innerHTML = `
                 <h2>Cadastro</h2>
@@ -301,64 +281,54 @@
             `;
         }
 
-        // Função para realizar login
+        function registerUser() {
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            if (newUsername && newPassword) {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push({ username: newUsername, password: newPassword });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Cadastro realizado com sucesso!');
+                changeToLogin();
+            } else {
+                alert('Preencha todos os campos!');
+            }
+        }
+
         function loginUser() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            if (username === "AMNP" && password === "senha") {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
                 currentUser = username;
                 document.getElementById('content').innerHTML = `
                     <h2>Bem-vindo, ${currentUser}</h2>
                     <button onclick="logout()">Sair</button>
                 `;
-                // Exibe o botão para excluir posts apenas para usuários logados
-                showDeleteButton();
+                loadPosts();
+                document.getElementById('logoutBtn').style.display = 'inline-block';
             } else {
                 alert('Usuário ou senha inválidos');
             }
         }
 
-        // Função para realizar registro
-        function registerUser() {
-            const newUsername = document.getElementById('newUsername').value;
-            const newPassword = document.getElementById('newPassword').value;
-            alert('Cadastro realizado com sucesso!');
-        }
-
-        // Função para mostrar o botão de excluir post
-        function showDeleteButton() {
-            if (currentUser === "AMNP") {
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = "Excluir Post";
-                deleteButton.classList.add('delete-button');
-                deleteButton.onclick = deletePost;
-                document.getElementById('content').appendChild(deleteButton);
-            }
-        }
-
-        // Função para excluir o primeiro post
-        function deletePost() {
-            let posts = JSON.parse(localStorage.getItem('posts')) || [];
-            posts.shift(); // Remove o primeiro post
-            localStorage.setItem('posts', JSON.stringify(posts));
-
-            // Atualizar a lista de posts
-            document.getElementById('postList').innerHTML = '';
-            loadPosts();
-        }
-
-        // Função para logout
         function logout() {
             currentUser = null;
             document.getElementById('content').innerHTML = '';
+            document.getElementById('logoutBtn').style.display = 'none';
             alert('Você saiu da sua conta!');
         }
+
+        // Load posts on page load
+        loadPosts();
     </script>
 </body>
 
 </html>
-
 
 
 
