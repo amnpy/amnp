@@ -161,6 +161,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 
     <script>
+        // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_AUTH_DOMAIN",
@@ -171,9 +172,22 @@
             appId: "YOUR_APP_ID"
         };
 
+        // Inicialização do Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
+
+        // Verifica o estado de autenticação do usuário
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('loginRegisterContainer').style.display = 'none';
+                document.getElementById('logoutButton').style.display = 'inline-block';
+                loadPosts();
+            } else {
+                document.getElementById('loginRegisterContainer').style.display = 'block';
+                document.getElementById('logoutButton').style.display = 'none';
+            }
+        });
 
         // Função de Login
         function login() {
@@ -183,11 +197,7 @@
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    localStorage.setItem('username', user.email);
-                    document.getElementById('logoutButton').style.display = 'inline-block';
                     alert('Login bem-sucedido!');
-                    document.getElementById('loginRegisterContainer').style.display = 'none';
-                    loadPosts(); // Carregar posts
                 })
                 .catch((error) => {
                     alert('Erro ao fazer login: ' + error.message);
@@ -203,58 +213,62 @@
                 .then((userCredential) => {
                     const user = userCredential.user;
                     alert('Cadastro realizado com sucesso!');
-                    document.getElementById('registerForm').style.display = 'none';
-                    document.getElementById('loginForm').style.display = 'block';
+                    showLoginForm();
                 })
                 .catch((error) => {
                     alert('Erro ao registrar: ' + error.message);
                 });
         }
 
-        // Exibe o formulário de login
-        function showLoginForm() {
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('registerForm').style.display = 'none';
-        }
-
-        // Exibe o formulário de registro
-        function showRegisterForm() {
-            document.getElementById('registerForm').style.display = 'block';
-            document.getElementById('loginForm').style.display = 'none';
-        }
-
         // Função de Logout
         function logout() {
             auth.signOut()
                 .then(() => {
-                    localStorage.removeItem('username');
-                    document.getElementById('logoutButton').style.display = 'none';
-                    alert('Você saiu com sucesso!');
-                    document.getElementById('loginRegisterContainer').style.display = 'block';
+                    alert('Você saiu!');
                 })
                 .catch((error) => {
                     alert('Erro ao sair: ' + error.message);
                 });
         }
 
-        // Função para adicionar posts
+        // Funções para alternar entre login e registro
+        function showRegisterForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        function showLoginForm() {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+        }
+
+        // Função para alternar entre as seções do conteúdo
+        function changeContent(section) {
+            const content = document.getElementById('content');
+            if (section === 'posts' && auth.currentUser) {
+                document.getElementById('postsSection').style.display = 'block';
+            } else {
+                document.getElementById('postsSection').style.display = 'none';
+            }
+        }
+
+        // Função para adicionar um post
         function addPost() {
             const postInput = document.getElementById('postInput');
-            const postList = document.getElementById('postList');
-
-            if (postInput.value.trim() !== '') {
+            if (postInput.value.trim()) {
                 const newPost = {
-                    username: localStorage.getItem('username') || 'Anônimo',
+                    username: auth.currentUser.email,
                     content: postInput.value
                 };
 
                 const postsRef = database.ref('posts');
                 postsRef.push(newPost); // Envia para o Firebase
                 postInput.value = ''; // Limpa o campo de entrada
+                loadPosts(); // Atualiza a lista de posts
             }
         }
 
-        // Função para exibir posts
+        // Função para carregar posts
         function loadPosts() {
             const postList = document.getElementById('postList');
             const postsRef = database.ref('posts');
