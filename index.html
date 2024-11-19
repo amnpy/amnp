@@ -385,6 +385,224 @@
 
 
 
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMNP</title>
+    <style>
+        /* Estilos continuam os mesmos */
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>AMNP</h1>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="changeContent('inicio')" id="inicioLink">Início</a></li>
+                <li><a href="#" onclick="changeContent('sobre')" id="sobreLink">Sobre</a></li>
+                <li><a href="#" onclick="changeContent('categorias')" id="categoriasLink">Categorias</a></li>
+                <li><a href="#" onclick="changeContent('contato')" id="contatoLink">Contato</a></li>
+                <li><a href="#" onclick="changeContent('posts')" id="postsLink">Posts</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Login e Registro no canto superior direito -->
+    <div class="login-register-container" id="loginRegisterContainer">
+        <div class="login-form" id="loginForm" style="display: none;">
+            <h3>Login</h3>
+            <input class="form-input" type="text" id="loginUsername" placeholder="Usuário" />
+            <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
+            <button class="form-button" onclick="login()">Entrar</button>
+        </div>
+
+        <div class="register-form" id="registerForm" style="display: none;">
+            <h3>Registrar</h3>
+            <input class="form-input" type="text" id="registerUsername" placeholder="Novo Usuário" />
+            <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
+            <button class="form-button" onclick="register()">Registrar</button>
+        </div>
+
+        <button class="logout-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
+    </div>
+
+    <div class="main-content">
+        <div id="content">
+            <h2>Bem-vindo ao AMNP!</h2>
+            <p>Escolha uma opção no menu para ver mais conteúdo.</p>
+        </div>
+
+        <!-- Seção de Posts -->
+        <div id="postsSection" class="post-section">
+            <h2>Poste algo novo</h2>
+            <div class="new-post-form">
+                <input type="text" id="postInput" placeholder="Digite algo..." class="form-input">
+                <button class="form-button" onclick="addPost()">Postar</button>
+            </div>
+
+            <div id="postList">
+                <!-- Os posts serão carregados aqui -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Função para mostrar conteúdo baseado no menu
+        function changeContent(page) {
+            const content = document.getElementById('content');
+            const postsSection = document.getElementById('postsSection');
+            if (page === 'inicio') {
+                content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'sobre') {
+                content.innerHTML = "<h2>Sobre</h2><p>Este é um site de exemplo para demonstrar funcionalidades de posts.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'categorias') {
+                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria para ver posts.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'contato') {
+                content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'posts') {
+                content.innerHTML = "<h2>Poste algo novo</h2>";
+                postsSection.style.display = 'block'; // Exibe a seção de posts
+            }
+        }
+
+        // Função de login
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username && password) {
+                localStorage.setItem('username', username);
+                document.getElementById('logoutButton').style.display = 'inline-block';
+                alert('Login bem-sucedido!');
+                document.getElementById('loginRegisterContainer').style.display = 'none';
+                loadPosts(); // Carregar posts armazenados
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
+
+        // Função de registro
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (username && password) {
+                localStorage.setItem('username', username);
+                alert('Cadastro bem-sucedido! Agora, você pode fazer login.');
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
+
+        // Função de logout
+        function logout() {
+            localStorage.removeItem('username');
+            document.getElementById('logoutButton').style.display = 'none';
+            alert('Você saiu com sucesso!');
+            document.getElementById('loginRegisterContainer').style.display = 'block';
+        }
+
+        // Função para adicionar posts
+        function addPost() {
+            const postInput = document.getElementById('postInput');
+            const postList = document.getElementById('postList');
+
+            if (postInput.value.trim() !== '') {
+                const newPost = {
+                    username: localStorage.getItem('username') || 'Anônimo',
+                    content: postInput.value
+                };
+
+                // Adicionar post ao Firebase
+                const postsRef = database.ref('posts');
+                postsRef.push(newPost);
+
+                // Exibir o novo post
+                displayPost(newPost);
+
+                postInput.value = ''; // Limpa o campo
+            }
+        }
+
+        // Função para exibir posts
+        function displayPost(post) {
+            const postList = document.getElementById('postList');
+            const postElement = document.createElement('article');
+            postElement.classList.add('post');
+            postElement.innerHTML = `
+                <h3>${post.username}</h3>
+                <p>${post.content}</p>
+            `;
+            postList.prepend(postElement);
+        }
+
+        // Função para carregar posts do Firebase
+        function loadPosts() {
+            const postList = document.getElementById('postList');
+            const postsRef = database.ref('posts');
+            postsRef.once('value', snapshot => {
+                const posts = snapshot.val();
+                postList.innerHTML = ''; // Limpa a lista de posts
+
+                // Exibir todos os posts
+                for (const id in posts) {
+                    const post = posts[id];
+                    displayPost(post);
+                }
+            });
+        }
+
+        // Carregar posts quando a página carregar
+        window.onload = function () {
+            loadPosts(); // Carregar posts
+            if (localStorage.getItem('username')) {
+                document.getElementById('logoutButton').style.display = 'inline-block';
+                document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
+            } else {
+                document.getElementById('loginRegisterContainer').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+
+
+
+
 
 
 
