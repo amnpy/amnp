@@ -240,4 +240,41 @@
                     const postElement = document.createElement('div');
                     postElement.classList.add('post');
                     postElement.innerHTML = `
-                        <h3>${
+                        <h3>${post.username}</h3>
+                        <p>${post.content}</p>
+                        <button class="delete-button" onclick="deletePost('${id}')">Deletar</button>
+                    `;
+                    postList.appendChild(postElement);
+                }
+            });
+        }
+
+        // Função para deletar um post
+        function deletePost(postId) {
+            const postsRef = database.ref('posts');
+            postsRef.child(postId).remove();
+        }
+
+        // Alterna entre as seções
+        function changeContent(section) {
+            const content = document.getElementById('content');
+            const postsSection = document.getElementById('postsSection');
+            content.innerHTML = ''; // Limpa o conteúdo existente
+
+            switch (section) {
+                case 'inicio':
+                    content.innerHTML = '<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>';
+                    break;
+                case 'posts':
+                    postsSection.style.display = 'block';
+                    loadPosts();
+                    break;
+                default:
+                    content.innerHTML = `<h2>${section}</h2><p>Conteúdo sobre ${section}...</p>`;
+                    break;
+            }
+        }
+    </script>
+</body>
+
+</html>
