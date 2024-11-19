@@ -100,6 +100,7 @@
             font-size: 0.9rem;
         }
 
+        /* Estilo do login e registro */
         .login-form, .register-form {
             display: none;
             margin-bottom: 20px;
@@ -141,6 +142,12 @@
 
         .logout-button:hover {
             background-color: #e03e00;
+        }
+
+        /* Exibir nome do usuário logado */
+        .logged-in-user {
+            font-size: 1.2rem;
+            color: #ff9900;
         }
     </style>
 </head>
@@ -190,6 +197,9 @@
                 </article>
             </div>
         </section>
+
+        <!-- Nome do usuário logado -->
+        <div class="logged-in-user" id="loggedInUser"></div>
     </div>
 
     <footer>
@@ -198,6 +208,7 @@
     </footer>
 
     <script>
+        // Exibe o formulário de login ou registro
         function toggleForm(form) {
             // Esconde todos os formulários
             document.querySelector('.login-form').style.display = 'none';
@@ -211,6 +222,7 @@
             }
         }
 
+        // Registrar um novo usuário
         function register() {
             const username = document.getElementById('registerUsername').value;
             const password = document.getElementById('registerPassword').value;
@@ -225,6 +237,7 @@
             }
         }
 
+        // Realizar o login
         function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
@@ -236,27 +249,24 @@
                 alert('Login bem-sucedido!');
                 document.querySelector('.logout-button').style.display = 'inline-block';
                 document.querySelector('.login-form').style.display = 'none';
+                document.querySelector('#loggedInUser').textContent = `Olá, ${username}!`;
             } else {
                 alert('Credenciais incorretas!');
             }
         }
 
+        // Logout do usuário
         function logout() {
             localStorage.removeItem('username');
             localStorage.removeItem('password');
             alert('Você saiu!');
             document.querySelector('.logout-button').style.display = 'none';
+            document.querySelector('#loggedInUser').textContent = '';
         }
 
         // Verifica se o usuário está logado ao carregar a página
         if (localStorage.getItem('username')) {
-            document.querySelector('.logout-button').style.display = 'inline-block';
-        }
-    </script>
-</body>
-
-</html>
-
+            document.querySelector('.logout-button').style.display =
 
 
 
