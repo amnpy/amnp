@@ -63,12 +63,15 @@
             margin: 20px auto;
             border-radius: 5px;
             max-width: 800px;
+            text-align: left;
         }
 
         .posts h2 {
             margin-bottom: 20px;
             font-size: 1.8rem;
             color: #ff9900;
+            transform: rotate(-5deg); /* Inclinação de esquerda para direita */
+            display: inline-block;
         }
 
         .post {
@@ -121,6 +124,34 @@
             transform: scale(1.1);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
         }
+
+        /* Formulário de Novo Post */
+        .new-post-form {
+            margin-bottom: 20px;
+        }
+
+        .new-post-form input {
+            width: calc(100% - 100px);
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .new-post-form button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .new-post-form button:hover {
+            background-color: #0077cc;
+        }
     </style>
 </head>
 
@@ -142,28 +173,60 @@
     <main class="main-content">
         <section class="posts">
             <h2>Posts</h2>
-            <article class="post">
-                <h3>Primeiro Post</h3>
-                <p>P:.</p>
-            </article>
-            <article class="post">
-                <h3>Segundo Post</h3>
-                <p>A VIDA SEMPRE DECIDE.</p>
-            </article>
+
+            <!-- Formulário de novo post -->
+            <div class="new-post-form">
+                <input type="text" id="postInput" placeholder="Digite algo...">
+                <button onclick="addPost()">Postar</button>
+            </div>
+
+            <!-- Lista de posts -->
+            <div id="postList">
+                <article class="post">
+                    <h3>Primeiro Post</h3>
+                    <p>P:.</p>
+                </article>
+                <article class="post">
+                    <h3>Segundo Post</h3>
+                    <p>A VIDA SEMPRE DECIDE.</p>
+                </article>
+            </div>
         </section>
     </main>
 
     <!-- Botão de Postar -->
-    <button class="post-button">+</button>
+    <button class="post-button" onclick="scrollToTop()">+</button>
 
     <!-- Rodapé -->
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
+
+    <!-- Script JavaScript -->
+    <script>
+        function addPost() {
+            const postInput = document.getElementById('postInput');
+            const postList = document.getElementById('postList');
+
+            if (postInput.value.trim() !== '') {
+                const newPost = document.createElement('article');
+                newPost.classList.add('post');
+                newPost.innerHTML = `
+                    <h3>Novo Post</h3>
+                    <p>${postInput.value}</p>
+                `;
+                postList.prepend(newPost); // Adiciona o post no início
+                postInput.value = ''; // Limpa o campo
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 
 </html>
-
 
 
 
