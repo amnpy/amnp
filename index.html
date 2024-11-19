@@ -113,6 +113,26 @@
             color: #bbb;
             margin-top: 5px;
         }
+
+        .login-form input,
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .login-form button {
+            background-color: #1da1f2;
+            color: white;
+            cursor: pointer;
+        }
+
+        .login-form button:hover {
+            background-color: #0077cc;
+        }
     </style>
 </head>
 <body>
@@ -139,25 +159,20 @@
     </footer>
 
     <script>
-        let loggedInUser = null;
-
         // Função para trocar o conteúdo
         function changeContent(section) {
             const content = document.getElementById('content');
             if (section === 'inicio') {
                 content.innerHTML = `
                     <h2>Início</h2>
-                    <p>Bem-vindo à página inicial do AMNP! Aqui você encontra as últimas novidades.</p>
-                    ${loggedInUser ? `
-                        <div class="new-post-form">
-                            <input type="text" id="postInput" placeholder="Escreva algo..." />
-                            <button onclick="addPost()">Postar</button>
-                        </div>
-                        <h3>Posts:</h3>
-                        <div id="postList"></div>
-                    ` : '<p>Faça login para começar a postar!</p>'}
+                    <div class="new-post-form">
+                        <input type="text" id="postInput" placeholder="Escreva algo..." />
+                        <button onclick="addPost()">Postar</button>
+                    </div>
+                    <h3>Posts:</h3>
+                    <div id="postList"></div>
                 `;
-                loadPosts(); // Carregar posts se houver login
+                loadPosts(); // Carregar posts
             } else if (section === 'sobre') {
                 content.innerHTML = `<h2>Sobre</h2><p>Somos o AMNP, dedicados a trazer o melhor conteúdo para você.</p>`;
             } else if (section === 'categorias') {
@@ -178,40 +193,6 @@
             }
         }
 
-        // Função de login simulada
-        function loginUser() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if (username && password) {
-                loggedInUser = username;
-                alert(`Bem-vindo, ${username}! Login realizado com sucesso.`);
-                changeContent('inicio');
-            } else {
-                alert('Por favor, preencha ambos os campos!');
-            }
-        }
-
-        // Função para exibir o formulário de registro
-        function showRegister() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Cadastro</h2>
-                <div class="login-form">
-                    <h3>Criar uma conta</h3>
-                    <input type="text" id="newUsername" placeholder="Usuário">
-                    <input type="password" id="newPassword" placeholder="Senha">
-                    <button onclick="registerUser()">Cadastrar</button>
-                </div>
-            `;
-        }
-
-        // Função de registro simulada
-        function registerUser() {
-            const newUsername = document.getElementById('newUsername').value;
-            const newPassword = document.getElementById('newPassword').value;
-            alert(`Usuário ${newUsername} cadastrado com sucesso!`);
-        }
-
         // Função para adicionar um post
         function addPost() {
             const postInput = document.getElementById('postInput');
@@ -221,7 +202,7 @@
             const newPost = {
                 title: "Novo Post",
                 content: postInput.value,
-                author: loggedInUser
+                author: "Anônimo"
             };
 
             // Criar o elemento do post
@@ -241,8 +222,8 @@
         function loadPosts() {
             const postList = document.getElementById('postList');
             const posts = [
-                { title: "Primeiro Post", content: "Este é o primeiro post!", author: "admin" },
-                { title: "Segundo Post", content: "Outro post legal por aqui.", author: "admin" }
+                { title: "Primeiro Post", content: "Este é o primeiro post!", author: "Anônimo" },
+                { title: "Segundo Post", content: "Outro post legal por aqui.", author: "Anônimo" }
             ];
 
             posts.forEach(post => {
@@ -255,6 +236,23 @@
                 `;
                 postList.appendChild(postElement);
             });
+        }
+
+        // Função de login simulada (Não necessária mais para postar)
+        function loginUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username && password) {
+                alert(`Bem-vindo, ${username}! Login realizado com sucesso.`);
+                changeContent('inicio');
+            } else {
+                alert('Por favor, preencha ambos os campos!');
+            }
+        }
+
+        // Função para exibir o formulário de registro (não necessária mais)
+        function showRegister() {
+            alert("Cadastro não implementado.");
         }
     </script>
 </body>
