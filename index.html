@@ -5,26 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMNP</title>
-    <link rel="icon" href="https://example.com/meu-favicon.ico"> <!-- Atualize o link para seu favicon -->
     <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
-            background-repeat: no-repeat;
-            background-size: cover;
+            line-height: 1.6;
             color: white;
             margin: 0;
             padding: 0;
+            text-align: center;
+            background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
         }
 
         header {
             background: rgba(0, 0, 0, 0.7);
             padding: 20px 0;
-            text-align: center;
+            border-bottom: 1px solid #444;
         }
 
         header h1 {
             font-size: 2.5rem;
+            color: #fff;
         }
 
         nav ul {
@@ -40,7 +50,7 @@
         nav ul li a {
             text-decoration: none;
             color: #bbb;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         nav ul li a:hover {
@@ -48,169 +58,180 @@
         }
 
         .main-content {
+            background: rgba(0, 0, 0, 0.8);
             padding: 20px;
-            text-align: center;
-        }
-
-        .form-input,
-        .form-button {
-            padding: 10px;
-            margin: 10px;
-            font-size: 1rem;
+            margin: 20px auto;
             border-radius: 5px;
+            max-width: 800px;
+            text-align: left;
         }
 
-        .form-button {
-            background-color: #1da1f2;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .form-button:hover {
-            background-color: #0077cc;
+        .posts h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #ff9900;
+            transform: rotate(-5deg); /* Inclinação de esquerda para direita */
+            display: inline-block;
         }
 
         .post {
-            background: rgba(0, 0, 0, 0.8);
             margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 10px;
         }
 
-        .delete-button {
-            background-color: #ff4d4d;
+        .post h3 {
+            color: #ff9900;
+        }
+
+        .post p {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-top: 1px solid #444;
+            color: #bbb;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+        }
+
+        /* Formulário de Novo Post */
+        .new-post-form {
+            margin-bottom: 20px;
+        }
+
+        .new-post-form input {
+            width: calc(100% - 100px);
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .new-post-form button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #1da1f2;
             color: white;
             border: none;
-            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        .delete-button:hover {
-            background-color: #cc0000;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 5px;
-            text-align: center;
-            width: 300px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+        .new-post-form button:hover {
+            background-color: #0077cc;
         }
     </style>
 </head>
 
 <body>
+    <!-- Cabeçalho -->
     <header>
         <h1>AMNP</h1>
         <nav>
             <ul>
-                <li><a href="#" onclick="changeContent('inicio')">Início</a></li>
-                <li><a href="#" onclick="changeContent('sobre')">Sobre</a></li>
-                <li><a href="#" onclick="changeContent('categorias')">Categorias</a></li>
-                <li><a href="#" onclick="changeContent('contato')">Contato</a></li>
-                <li><a href="#" onclick="changeContent('posts')">Posts</a></li>
+                <li><a href="javascript:void(0)" onclick="showPosts()">Início</a></li>
+                <li><a href="javascript:void(0)" onclick="clearSobre()">Sobre</a></li>
+                <li><a href="#">Categorias</a></li>
+                <li><a href="#">Contato</a></li>
             </ul>
         </nav>
     </header>
 
-    <div class="main-content">
-        <div id="content">
-            <h2>Bem-vindo ao AMNP!</h2>
-            <p>Escolha uma opção no menu para ver mais conteúdo.</p>
-        </div>
+    <!-- Conteúdo Principal -->
+    <main class="main-content" id="content">
+        <!-- Aqui será carregado o conteúdo dinâmico -->
+    </main>
 
-        <div id="loginContainer">
-            <button class="form-button" onclick="openModal()">Login / Registrar</button>
-        </div>
-
-        <div id="postsSection" style="display: none;">
-            <h2>Poste algo novo</h2>
-            <input class="form-input" type="text" id="postInput" placeholder="Digite algo..." />
-            <button class="form-button" onclick="addPost()">Postar</button>
-
-            <div id="postList"></div>
-        </div>
-    </div>
-
+    <!-- Rodapé -->
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Modal de Login e Registro -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3>Escolha uma opção:</h3>
-            <button class="form-button" onclick="showLoginForm()">Login</button>
-            <button class="form-button" onclick="showRegisterForm()">Registrar</button>
-
-            <div id="loginForm" style="display: none;">
-                <input class="form-input" type="email" id="loginEmail" placeholder="E-mail" />
-                <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
-                <button class="form-button" onclick="login()">Entrar</button>
-            </div>
-
-            <div id="registerForm" style="display: none;">
-                <input class="form-input" type="email" id="registerEmail" placeholder="E-mail" />
-                <input class="form-input" type="password" id="registerPassword" placeholder="Senha" />
-                <button class="form-button" onclick="register()">Registrar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js" type="module"></script>
-
+    <!-- Script JavaScript -->
     <script>
-        // Configuração e inicialização do Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        // Função para adicionar um novo post
+        function addPost() {
+            const postInput = document.getElementById('postInput');
+            const postList = document.getElementById('postList');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
-            authDomain: "amnp-af2f0.firebaseapp.com",
-            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "amnp-af2f0",
-        };
+            if (postInput.value.trim() !== '') {
+                const newPost = {
+                    title: "Novo Post",
+                    content: postInput.value
+                };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const database = getDatabase(app);
+                // Carregar os posts existentes do localStorage ou criar um novo array
+                let posts = JSON.parse(localStorage.getItem('posts')) || [];
 
-        // Funcionalidades continuam como antes
+                // Adicionar o novo post ao array
+                posts.unshift(newPost); // Adiciona no início da lista
+
+                // Salvar os posts atualizados no localStorage
+                localStorage.setItem('posts', JSON.stringify(posts));
+
+                // Criar o elemento do post
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${newPost.title}</h3>
+                    <p>${newPost.content}</p>
+                `;
+                
+                // Adicionar o novo post na lista de posts
+                postList.prepend(postElement);
+                
+                postInput.value = ''; // Limpar o campo de texto
+            }
+        }
+
+        // Função para carregar os posts do localStorage ao carregar a página
+        function loadPosts() {
+            const postList = document.getElementById('postList');
+            const posts = JSON.parse(localStorage.getItem('posts')) || []; // Carregar ou criar array vazio
+
+            // Adicionar cada post ao DOM
+            posts.forEach(post => {
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p>${post.content}</p>
+                `;
+                postList.appendChild(postElement);
+            });
+        }
+
+        // Carregar os posts quando a página for carregada
+        window.onload = loadPosts;
+
+        // Função para exibir posts ao clicar no botão "Início"
+        function showPosts() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <section class="posts">
+                    <h2>Posts</h2>
+                    <div class="new-post-form">
+                        <input type="text" id="postInput" placeholder="Digite algo...">
+                        <button onclick="addPost()">Postar</button>
+                    </div>
+                    <div id="postList"></div>
+                </section>
+            `;
+            loadPosts(); // Carregar os posts
+        }
+
+        // Função para limpar o conteúdo do botão "Sobre"
+        function clearSobre() {
+            const aboutButton = document.querySelector('nav ul li a[href="javascript:void(0)"][onclick="clearSobre()"]');
+            aboutButton.innerHTML = ""; // Deixa o botão sem palavras
+        }
     </script>
 </body>
 
