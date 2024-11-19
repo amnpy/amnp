@@ -8,172 +8,13 @@
     <!-- Google Font for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+
     <style>
-        /* Reset básico */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
-            color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-        }
-
-        header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px 0;
-            border-bottom: 1px solid #444;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            color: #fff;
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 10px 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin: 0 10px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #bbb;
-            font-size: 1rem;
-        }
-
-        nav ul li a:hover {
-            color: #ff9900;
-        }
-
-        .main-content {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            margin: 20px auto;
-            border-radius: 5px;
-            max-width: 800px;
-            text-align: left;
-            transition: transform 0.3s ease;
-        }
-
-        .main-content:hover {
-            transform: scale(1.02);
-        }
-
-        .posts h2 {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #ff9900;
-            transform: rotate(-5deg);
-            display: inline-block;
-        }
-
-        .post {
-            margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .post:hover {
-            background-color: rgba(255, 153, 0, 0.2);
-        }
-
-        .post h3 {
-            color: #ff9900;
-        }
-
-        .post p {
-            margin: 10px 0;
-            font-size: 1rem;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border-top: 1px solid #444;
-            color: #bbb;
-        }
-
-        footer p {
-            font-size: 0.9rem;
-        }
-
-        .form-input {
-            width: 200px;
-            padding: 8px;
-            margin: 5px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .form-button {
-            padding: 8px 15px;
-            font-size: 1rem;
-            background-color: #1da1f2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .form-button:hover {
-            background-color: #0077cc;
-        }
-
-        .category-button {
-            margin: 10px;
-            font-size: 1rem;
-            background-color: #ff9900;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .category-button:hover {
-            background-color: #ff7f00;
-        }
-
-        /* Estilo da seção de posts */
-        .post-section {
-            display: none;
-        }
-
-        .delete-button {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-button:hover {
-            background-color: #cc0000;
-        }
+        /* Your existing styles here... */
+        /* Add styles as necessary */
     </style>
 </head>
 
@@ -192,9 +33,9 @@
     </header>
 
     <div class="login-register-container" id="loginRegisterContainer">
-        <div class="login-form" id="loginForm" style="display: none;">
+        <div class="login-form" id="loginForm">
             <h3>Login</h3>
-            <input class="form-input" type="text" id="loginUsername" placeholder="Usuário" />
+            <input class="form-input" type="email" id="loginEmail" placeholder="Email" />
             <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
             <button class="form-button" onclick="login()">Entrar</button>
             <p id="loginError" style="color: red; display: none;">Por favor, preencha todos os campos.</p>
@@ -202,7 +43,7 @@
 
         <div class="register-form" id="registerForm" style="display: none;">
             <h3>Registrar</h3>
-            <input class="form-input" type="text" id="registerUsername" placeholder="Novo Usuário" />
+            <input class="form-input" type="email" id="registerEmail" placeholder="Novo Email" />
             <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
             <button class="form-button" onclick="register()">Registrar</button>
             <p id="registerError" style="color: red; display: none;">Por favor, preencha todos os campos.</p>
@@ -216,16 +57,6 @@
             <h2>Bem-vindo ao AMNP!</h2>
             <p>Escolha uma opção no menu para ver mais conteúdo.</p>
         </div>
-
-        <div id="postsSection" class="post-section">
-            <h2>Poste algo novo</h2>
-            <div class="new-post-form">
-                <input type="text" id="postInput" placeholder="Digite algo..." class="form-input">
-                <button class="form-button" onclick="addPost()">Postar</button>
-            </div>
-
-            <div id="postList"></div>
-        </div>
     </div>
 
     <footer>
@@ -233,100 +64,95 @@
     </footer>
 
     <script>
+        // Firebase configuration (use your own Firebase config values here)
+      const firebaseConfig = {
+            apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
+            authDomain: "amnp-af2f0.firebaseapp.com",
+            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "amnp-af2f0",
+            storageBucket: "amnp-af2f0.firebasestorage.app",
+            messagingSenderId: "468676978607",
+            appId: "1:468676978607:web:fe277a7fad97b27b2fb15a"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Show login form
         function changeContent(page) {
             const content = document.getElementById('content');
-            const postsSection = document.getElementById('postsSection');
             if (page === 'inicio') {
                 content.innerHTML = '<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>';
-            } else if (page === 'sobre') {
-                content.innerHTML = '<h2>Sobre AMNP</h2><p>Este é um site de demonstração de posts.</p>';
-            } else if (page === 'categorias') {
-                content.innerHTML = '<h2>Categorias</h2><p>Escolha uma categoria para ver os posts relacionados.</p>';
-            } else if (page === 'contato') {
-                content.innerHTML = '<h2>Contato</h2><p>Entre em contato pelo email: exemplo@amnp.com</p>';
             } else if (page === 'posts') {
-                postsSection.style.display = 'block';
-                loadPosts();
+                content.innerHTML = '<h2>Poste algo novo</h2><p>Insira o conteúdo do seu post aqui.</p>';
             }
         }
 
-        function addPost() {
-            const postInput = document.getElementById('postInput').value;
-            if (postInput.trim() !== '') {
-                savePost(postInput);
-                document.getElementById('postInput').value = ''; // Clear input field
-                loadPosts();
-            }
-        }
-
-        function savePost(postContent) {
-            let posts = JSON.parse(localStorage.getItem('posts')) || [];
-            posts.push(postContent);
-            localStorage.setItem('posts', JSON.stringify(posts));
-        }
-
-        function loadPosts() {
-            const postList = document.getElementById('postList');
-            postList.innerHTML = '';
-            let posts = JSON.parse(localStorage.getItem('posts')) || [];
-            posts.forEach((post, index) => {
-                const postDiv = document.createElement('div');
-                postDiv.classList.add('post');
-                postDiv.innerHTML = `
-                    <h3>Post #${index + 1}</h3>
-                    <p>${post}</p>
-                    <button class="delete-button" onclick="deletePost(${index})">Deletar</button>
-                `;
-                postList.appendChild(postDiv);
-            });
-        }
-
-        function deletePost(index) {
-            let posts = JSON.parse(localStorage.getItem('posts')) || [];
-            posts.splice(index, 1);
-            localStorage.setItem('posts', JSON.stringify(posts));
-            loadPosts();
-        }
-
+        // Login function
         function login() {
-            const username = document.getElementById('loginUsername').value;
+            const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            if (username && password) {
-                localStorage.setItem('username', username);
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('logoutButton').style.display = 'inline-block';
+
+            if (email && password) {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        document.getElementById('loginForm').style.display = 'none';
+                        document.getElementById('registerForm').style.display = 'none';
+                        document.getElementById('logoutButton').style.display = 'inline-block';
+                    })
+                    .catch((error) => {
+                        document.getElementById('loginError').textContent = error.message;
+                        document.getElementById('loginError').style.display = 'block';
+                    });
             } else {
-                document.getElementById('loginError').style.display = 'inline-block';
+                document.getElementById('loginError').textContent = 'Por favor, preencha todos os campos.';
+                document.getElementById('loginError').style.display = 'block';
             }
         }
 
+        // Register function
         function register() {
-            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
-            if (username && password) {
-                localStorage.setItem('username', username);
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('logoutButton').style.display = 'inline-block';
+
+            if (email && password) {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(() => {
+                        document.getElementById('registerForm').style.display = 'none';
+                        document.getElementById('loginForm').style.display = 'none';
+                        document.getElementById('logoutButton').style.display = 'inline-block';
+                    })
+                    .catch((error) => {
+                        document.getElementById('registerError').textContent = error.message;
+                        document.getElementById('registerError').style.display = 'block';
+                    });
             } else {
-                document.getElementById('registerError').style.display = 'inline-block';
+                document.getElementById('registerError').textContent = 'Por favor, preencha todos os campos.';
+                document.getElementById('registerError').style.display = 'block';
             }
         }
 
+        // Logout function
         function logout() {
-            localStorage.removeItem('username');
-            document.getElementById('logoutButton').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'inline-block';
-            document.getElementById('registerForm').style.display = 'inline-block';
+            auth.signOut()
+                .then(() => {
+                    document.getElementById('loginForm').style.display = 'inline-block';
+                    document.getElementById('registerForm').style.display = 'inline-block';
+                    document.getElementById('logoutButton').style.display = 'none';
+                });
         }
 
-        // Load posts when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('username')) {
+        // Monitor authentication state
+        auth.onAuthStateChanged(user => {
+            if (user) {
                 document.getElementById('logoutButton').style.display = 'inline-block';
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('registerForm').style.display = 'none';
+            } else {
+                document.getElementById('logoutButton').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'inline-block';
+                document.getElementById('registerForm').style.display = 'inline-block';
             }
         });
     </script>
