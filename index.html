@@ -343,6 +343,60 @@
                 <h2>${content.charAt(0).toUpperCase() + content.slice(1)}</h2>
                 <p>Conteúdo de ${content}...</p>
             `;
+            function register() {
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            alert("Usuário registrado com sucesso!");
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+
+            // Exibindo mensagem de erro detalhada ao usuário
+            if (errorCode === 'auth/invalid-email') {
+                alert("O e-mail fornecido não é válido. Por favor, insira um e-mail válido.");
+            } else if (errorCode === 'auth/email-already-in-use') {
+                alert("Este e-mail já está sendo utilizado. Tente outro e-mail.");
+            } else if (errorCode === 'auth/weak-password') {
+                alert("A senha deve ter pelo menos 6 caracteres. Tente novamente.");
+            } else {
+                alert("Erro ao registrar: " + errorMessage);
+            }
+        });
+}
+
+        function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            alert("Login bem-sucedido!");
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+
+            // Exibindo mensagem de erro detalhada ao usuário
+            if (errorCode === 'auth/invalid-email') {
+                alert("O e-mail fornecido não é válido. Por favor, insira um e-mail válido.");
+            } else if (errorCode === 'auth/user-disabled') {
+                alert("Este usuário foi desativado. Entre em contato com o suporte.");
+            } else if (errorCode === 'auth/user-not-found') {
+                alert("Usuário não encontrado. Verifique o e-mail e tente novamente.");
+            } else if (errorCode === 'auth/wrong-password') {
+                alert("Senha incorreta. Verifique sua senha e tente novamente.");
+            } else {
+                alert("Erro ao fazer login: " + errorMessage);
+            }
+        });
+}
+
         }
     </script>
 </body>
