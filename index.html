@@ -118,18 +118,20 @@
     </header>
 
     <div id="loginRegisterContainer" style="position: absolute; top: 10px; right: 10px; background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 5px;">
-        <div id="loginForm" style="display: none;">
+        <div id="loginForm" style="display: block;">
             <h3>Login</h3>
-            <input class="form-input" type="text" id="loginUsername" placeholder="Usuário" />
+            <input class="form-input" type="email" id="loginEmail" placeholder="E-mail" />
             <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
             <button class="form-button" onclick="login()">Entrar</button>
+            <button class="form-button" onclick="showRegisterForm()">Criar Conta</button>
         </div>
 
         <div id="registerForm" style="display: none;">
             <h3>Registrar</h3>
-            <input class="form-input" type="text" id="registerUsername" placeholder="Novo Usuário" />
-            <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
+            <input class="form-input" type="email" id="registerEmail" placeholder="E-mail" />
+            <input class="form-input" type="password" id="registerPassword" placeholder="Senha" />
             <button class="form-button" onclick="register()">Registrar</button>
+            <button class="form-button" onclick="showLoginForm()">Voltar</button>
         </div>
 
         <button class="form-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
@@ -155,59 +157,84 @@
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 
     <script>
         const firebaseConfig = {
-            apiKey: "468676978607",
-            authDomain: "amnp-af2f0.firebaseapp.com",
-            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app/",
-            projectId: "468676978607",
-            storageBucket: "468676978607.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
             appId: "YOUR_APP_ID"
         };
 
         const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const database = firebase.database();
 
         // Função de Login
         function login() {
-            const username = document.getElementById('loginUsername').value;
+            const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
-            if (username && password) {
-                localStorage.setItem('username', username);
-                document.getElementById('logoutButton').style.display = 'inline-block';
-                alert('Login bem-sucedido!');
-                document.getElementById('loginRegisterContainer').style.display = 'none';
-                loadPosts(); // Carregar posts
-            } else {
-                alert('Preencha todos os campos.');
-            }
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    localStorage.setItem('username', user.email);
+                    document.getElementById('logoutButton').style.display = 'inline-block';
+                    alert('Login bem-sucedido!');
+                    document.getElementById('loginRegisterContainer').style.display = 'none';
+                    loadPosts(); // Carregar posts
+                })
+                .catch((error) => {
+                    alert('Erro ao fazer login: ' + error.message);
+                });
         }
 
         // Função de Registro
         function register() {
-            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
 
-            if (username && password) {
-                localStorage.setItem('username', username);
-                alert('Cadastro realizado com sucesso!');
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('loginForm').style.display = 'block';
-            } else {
-                alert('Preencha todos os campos.');
-            }
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    alert('Cadastro realizado com sucesso!');
+                    document.getElementById('registerForm').style.display = 'none';
+                    document.getElementById('loginForm').style.display = 'block';
+                })
+                .catch((error) => {
+                    alert('Erro ao registrar: ' + error.message);
+                });
+        }
+
+        // Exibe o formulário de login
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
+
+        // Exibe o formulário de registro
+        function showRegisterForm() {
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
         }
 
         // Função de Logout
         function logout() {
-            localStorage.removeItem('username');
-            document.getElementById('logoutButton').style.display = 'none';
-            alert('Você saiu com sucesso!');
-            document.getElementById('loginRegisterContainer').style.display = 'block';
+            auth.signOut()
+                .then(() => {
+                    localStorage.removeItem('username');
+                    document.getElementById('logoutButton').style.display = 'none';
+                    alert('Você saiu com sucesso!');
+                    document.getElementById('loginRegisterContainer').style.display = 'block';
+                })
+                .catch((error) => {
+                    alert('Erro ao sair: ' + error.message);
+                });
         }
 
         // Função para adicionar posts
@@ -242,37 +269,10 @@
                     postElement.innerHTML = `
                         <h3>${post.username}</h3>
                         <p>${post.content}</p>
-                        <button class="delete-button" onclick="deletePost('${id}')">Deletar</button>
                     `;
                     postList.appendChild(postElement);
                 }
             });
-        }
-
-        // Função para deletar um post
-        function deletePost(postId) {
-            const postsRef = database.ref('posts');
-            postsRef.child(postId).remove();
-        }
-
-        // Alterna entre as seções
-        function changeContent(section) {
-            const content = document.getElementById('content');
-            const postsSection = document.getElementById('postsSection');
-            content.innerHTML = ''; // Limpa o conteúdo existente
-
-            switch (section) {
-                case 'inicio':
-                    content.innerHTML = '<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>';
-                    break;
-                case 'posts':
-                    postsSection.style.display = 'block';
-                    loadPosts();
-                    break;
-                default:
-                    content.innerHTML = `<h2>${section}</h2><p>Conteúdo sobre ${section}...</p>`;
-                    break;
-            }
         }
     </script>
 </body>
