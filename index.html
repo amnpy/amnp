@@ -51,16 +51,6 @@
             text-align: center;
         }
 
-        .post-section {
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            background: rgba(0, 0, 0, 0.7);
-        }
-
         .form-input,
         .form-button {
             padding: 10px;
@@ -162,7 +152,7 @@
             <button class="form-button" onclick="openModal()">Login / Registrar</button>
         </div>
 
-        <div id="postsSection" class="post-section">
+        <div id="postsSection" style="display: none;">
             <h2>Poste algo novo</h2>
             <input class="form-input" type="text" id="postInput" placeholder="Digite algo..." />
             <button class="form-button" onclick="addPost()">Postar</button>
@@ -267,9 +257,11 @@
             signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
                     closeModal();
+                    alert("Login bem-sucedido!");
                 })
                 .catch((error) => {
                     console.error(error);
+                    alert("Erro no login");
                 });
         }
 
@@ -278,11 +270,13 @@
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
+                .then(() => {
                     closeModal();
+                    alert("Registro bem-sucedido!");
                 })
                 .catch((error) => {
                     console.error(error);
+                    alert("Erro no registro");
                 });
         }
 
