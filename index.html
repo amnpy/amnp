@@ -255,6 +255,103 @@
         function showRegister() {
             alert("Cadastro não implementado.");
         }
+        function registerUser() {
+    const username = document.getElementById('newUsername').value;
+    const password = document.getElementById('newPassword').value;
+
+    // Criar um novo usuário com email e senha
+    auth.createUserWithEmailAndPassword(username + "@example.com", password)
+        .then((userCredential) => {
+            // Salvar o nome de usuário no Realtime Database
+            const user = userCredential.user;
+            db.ref('users/' + user.uid).set({
+                username: username
+            });
+
+            alert('Cadastro realizado com sucesso!');
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert('Erro ao cadastrar: ' + errorMessage);
+        });
+}
+        function loginUser() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    // Login com email e senha (o e-mail será composto com o nome de usuário)
+    auth.signInWithEmailAndPassword(username + "@example.com", password)
+        .then((userCredential) => {
+            // Usuário logado com sucesso
+            alert('Login realizado com sucesso!');
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert('Erro ao logar: ' + errorMessage);
+        });
+}
+function addPost() {
+    const postInput = document.getElementById('postInput');
+    const postList = document.getElementById('postList');
+    const currentUser = auth.currentUser; // Verifica se o usuário está logado
+
+    if (postInput.value.trim() !== '') {
+        const newPost = {
+            title: "Novo Post",
+            content: postInput.value,
+            username: currentUser ? currentUser.displayName : "Anônimo"
+        };
+
+        // Salvar o post no Realtime Database
+        db.ref('posts').push(newPost)
+            .then(() => {
+                // Adicionar o post à página
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${newPost.title}</h3>
+                    <p>${newPost.content}</p>
+                    <small>Por: ${newPost.username}</small>
+                `;
+                postList.prepend(postElement);
+
+                postInput.value = ''; // Limpar o campo de texto
+            })
+            .catch((error) => {
+                console.error("Erro ao salvar post:", error);
+            });
+    }
+}
+function loadPosts() {
+    const postList = document.getElementById('postList');
+
+    // Escutando alterações no nó "posts" do Firebase
+    db.ref('posts').on('value', (snapshot) => {
+        postList.innerHTML = ''; // Limpar os posts anteriores
+
+        // Iterar sobre os posts armazenados no Firebase
+        snapshot.forEach((childSnapshot) => {
+            const post = childSnapshot.val();
+
+            const postElement = document.createElement('article');
+            postElement.classList.add('post');
+            postElement.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.content}</p>
+                <small>Por: ${post.username}</small>
+            `;
+
+            postList.appendChild(postElement);
+        });
+    });
+}
+window.onload = function() {
+    loadPosts(); // Carregar posts
+};
+
+
     </script>
 </body>
 </html>
