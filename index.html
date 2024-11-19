@@ -1,144 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMNP</title>
 
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login e Cadastro</title>
-    <style>
-        /* Reset básico */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: white;
-            text-align: center;
-            background: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579') no-repeat center center fixed;
-            background-size: cover;
-        }
-
-        .form-container {
-            max-width: 400px;
-            margin: 100px auto;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        h2 {
-            color: #ff9900;
-            margin-bottom: 20px;
-        }
-
-        .form-container input,
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .form-container button {
-            background-color: #1da1f2;
-            color: white;
-            cursor: pointer;
-        }
-
-        .form-container button:hover {
-            background-color: #0077cc;
-        }
-
-        .form-container p {
-            color: #bbb;
-        }
-
-        .form-container a {
-            color: #ff9900;
-            text-decoration: none;
-        }
-
-        .form-container a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="login-form" class="form-container">
-        <h2>Login</h2>
-        <input type="text" id="login-username" placeholder="Usuário">
-        <input type="password" id="login-password" placeholder="Senha">
-        <button onclick="login()">Entrar</button>
-        <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegisterForm()">Cadastre-se</a></p>
-    </div>
-
-    <div id="register-form" class="form-container" style="display: none;">
-        <h2>Cadastro</h2>
-        <input type="text" id="register-username" placeholder="Novo Usuário">
-        <input type="password" id="register-password" placeholder="Nova Senha">
-        <button onclick="register()">Cadastrar</button>
-        <p>Já tem uma conta? <a href="javascript:void(0)" onclick="showLoginForm()">Faça login</a></p>
-    </div>
-
-    <script>
-        // Exibe o formulário de login
-        function showLoginForm() {
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('register-form').style.display = 'none';
-        }
-
-        // Exibe o formulário de cadastro
-        function showRegisterForm() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('register-form').style.display = 'block';
-        }
-
-        // Função de login (simulação)
-        function login() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            if (username === '' || password === '') {
-                alert('Por favor, preencha todos os campos!');
-                return;
-            }
-
-            // Aqui você pode adicionar validação real, como uma chamada a uma API ou banco de dados.
-            alert('Login realizado com sucesso!');
-        }
-
-        // Função de cadastro (simulação)
-        function register() {
-            const username = document.getElementById('register-username').value;
-            const password = document.getElementById('register-password').value;
-
-            if (username === '' || password === '') {
-                alert('Por favor, preencha todos os campos!');
-                return;
-            }
-
-            // Aqui você pode adicionar a lógica de armazenamento, como enviar para um servidor ou Firebase.
-            alert('Cadastro realizado com sucesso!');
-            showLoginForm();  // Após o cadastro, volta para o formulário de login.
-        }
-    </script>
-
-</body>
-</html>
-
-    
     <style>
         /* Reset básico */
         * {
@@ -482,9 +344,184 @@ function loadPosts() {
         });
     });
 }
+        
 window.onload = function() {
     loadPosts(); // Carregar posts
 };
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login e Cadastro com Firebase</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: white;
+            text-align: center;
+            background: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #ff9900;
+            margin-bottom: 20px;
+        }
+
+        .form-container input,
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            background-color: #1da1f2;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #0077cc;
+        }
+
+        .form-container p {
+            color: #bbb;
+        }
+
+        .form-container a {
+            color: #ff9900;
+            text-decoration: none;
+        }
+
+        .form-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-form" class="form-container">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="E-mail">
+        <input type="password" id="login-password" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+        <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegisterForm()">Cadastre-se</a></p>
+    </div>
+
+    <div id="register-form" class="form-container" style="display: none;">
+        <h2>Cadastro</h2>
+        <input type="email" id="register-email" placeholder="E-mail">
+        <input type="password" id="register-password" placeholder="Senha">
+        <button onclick="register()">Cadastrar</button>
+        <p>Já tem uma conta? <a href="javascript:void(0)" onclick="showLoginForm()">Faça login</a></p>
+    </div>
+
+    <!-- Adicionar Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js"></script>
+
+    <script>
+        // Configuração do Firebase (substitua com as suas credenciais)
+        const firebaseConfig = {
+
+    apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
+    authDomain: "amnp-af2f0.firebaseapp.com",
+    databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "amnp-af2f0",
+    storageBucket: "amnp-af2f0.firebasestorage.app",
+    messagingSenderId: "468676978607",
+    appId: "1:468676978607:web:fe277a7fad97b27b2fb15a",
+    measurementId: "G-VLBG5RE69T"
+
+  };
+
+
+        // Inicialize o Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Exibe o formulário de login
+        function showLoginForm() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-form').style.display = 'none';
+        }
+
+        // Exibe o formulário de cadastro
+        function showRegisterForm() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+
+        // Função de login com Firebase
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (email === '' || password === '') {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    alert('Login realizado com sucesso!');
+                    console.log(user);
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert(`Erro: ${errorMessage}`);
+                });
+        }
+
+        // Função de cadastro com Firebase
+        function register() {
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            if (email === '' || password === '') {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    alert('Cadastro realizado com sucesso!');
+                    console.log(user);
+                    showLoginForm();  // Após o cadastro, volta para o formulário de login.
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert(`Erro: ${errorMessage}`);
+                });
+        }
+    </script>
+
+</body>
+</html>
 
 
     </script>
