@@ -384,7 +384,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -393,11 +392,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMNP</title>
     <style>
-        /* Estilos continuam os mesmos */
+        /* Estilos de layout */
     </style>
 </head>
 
 <body>
+    <!-- Cabeçalho e navegação -->
     <header>
         <h1>AMNP</h1>
         <nav>
@@ -411,7 +411,7 @@
         </nav>
     </header>
 
-    <!-- Login e Registro no canto superior direito -->
+    <!-- Login e registro -->
     <div class="login-register-container" id="loginRegisterContainer">
         <div class="login-form" id="loginForm" style="display: none;">
             <h3>Login</h3>
@@ -430,13 +430,14 @@
         <button class="logout-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
     </div>
 
+    <!-- Seção de Posts -->
     <div class="main-content">
         <div id="content">
             <h2>Bem-vindo ao AMNP!</h2>
             <p>Escolha uma opção no menu para ver mais conteúdo.</p>
         </div>
 
-        <!-- Seção de Posts -->
+        <!-- Formulário de posts -->
         <div id="postsSection" class="post-section">
             <h2>Poste algo novo</h2>
             <div class="new-post-form">
@@ -470,69 +471,9 @@
             appId: "YOUR_APP_ID"
         };
 
+        // Inicializando o Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-        // Função para mostrar conteúdo baseado no menu
-        function changeContent(page) {
-            const content = document.getElementById('content');
-            const postsSection = document.getElementById('postsSection');
-            if (page === 'inicio') {
-                content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'sobre') {
-                content.innerHTML = "<h2>Sobre</h2><p>Este é um site de exemplo para demonstrar funcionalidades de posts.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'categorias') {
-                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria para ver posts.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'contato') {
-                content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
-                postsSection.style.display = 'none';
-            } else if (page === 'posts') {
-                content.innerHTML = "<h2>Poste algo novo</h2>";
-                postsSection.style.display = 'block'; // Exibe a seção de posts
-            }
-        }
-
-        // Função de login
-        function login() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-
-            if (username && password) {
-                localStorage.setItem('username', username);
-                document.getElementById('logoutButton').style.display = 'inline-block';
-                alert('Login bem-sucedido!');
-                document.getElementById('loginRegisterContainer').style.display = 'none';
-                loadPosts(); // Carregar posts armazenados
-            } else {
-                alert('Por favor, preencha todos os campos.');
-            }
-        }
-
-        // Função de registro
-        function register() {
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-
-            if (username && password) {
-                localStorage.setItem('username', username);
-                alert('Cadastro bem-sucedido! Agora, você pode fazer login.');
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('loginForm').style.display = 'block';
-            } else {
-                alert('Por favor, preencha todos os campos.');
-            }
-        }
-
-        // Função de logout
-        function logout() {
-            localStorage.removeItem('username');
-            document.getElementById('logoutButton').style.display = 'none';
-            alert('Você saiu com sucesso!');
-            document.getElementById('loginRegisterContainer').style.display = 'block';
-        }
 
         // Função para adicionar posts
         function addPost() {
@@ -545,7 +486,7 @@
                     content: postInput.value
                 };
 
-                // Adicionar post ao Firebase
+                // Enviar post para o Firebase
                 const postsRef = database.ref('posts');
                 postsRef.push(newPost);
 
@@ -556,7 +497,7 @@
             }
         }
 
-        // Função para exibir posts
+        // Exibir posts na tela
         function displayPost(post) {
             const postList = document.getElementById('postList');
             const postElement = document.createElement('article');
@@ -568,7 +509,7 @@
             postList.prepend(postElement);
         }
 
-        // Função para carregar posts do Firebase
+        // Carregar posts do Firebase
         function loadPosts() {
             const postList = document.getElementById('postList');
             const postsRef = database.ref('posts');
@@ -576,7 +517,7 @@
                 const posts = snapshot.val();
                 postList.innerHTML = ''; // Limpa a lista de posts
 
-                // Exibir todos os posts
+                // Exibe todos os posts
                 for (const id in posts) {
                     const post = posts[id];
                     displayPost(post);
@@ -598,14 +539,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-  
-</html> 
