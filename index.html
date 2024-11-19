@@ -180,6 +180,19 @@
         .post-section {
             display: none;
         }
+
+        .delete-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #cc0000;
+        }
     </style>
 </head>
 
@@ -253,10 +266,10 @@
                 content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
                 postsSection.style.display = 'none';
             } else if (page === 'sobre') {
-                content.innerHTML = "<h2>Sobre nós</h2><p>Informações sobre o site AMNP.</p>";
+                content.innerHTML = "<h2>Sobre</h2><p>Este é um site de exemplo para demonstrar funcionalidades de posts.</p>";
                 postsSection.style.display = 'none';
             } else if (page === 'categorias') {
-                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria abaixo para começar a postar.</p>";
+                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria para ver posts.</p>";
                 postsSection.style.display = 'none';
             } else if (page === 'contato') {
                 content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
@@ -272,14 +285,20 @@
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
 
-            // Verificar se as credenciais estão corretas
             if (username && password) {
                 localStorage.setItem('username', username);
                 localStorage.setItem('password', password);
                 document.getElementById('logoutButton').style.display = 'inline-block';
                 alert('Login bem-sucedido!');
-                document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
+                document.getElementById('loginRegisterContainer').style.display = 'none';
                 loadPosts(); // Carregar posts armazenados
+
+                // Se o usuário for "AMNP", permitir exclusão de posts
+                if (username === 'AMNP') {
+                    document.querySelectorAll('.delete-button').forEach(button => {
+                        button.style.display = 'inline-block';
+                    });
+                }
             } else {
                 alert('Por favor, preencha todos os campos.');
             }
@@ -307,6 +326,12 @@
             localStorage.removeItem('password');
             document.getElementById('logoutButton').style.display = 'none';
             alert('Você saiu com sucesso!');
+            document.getElementById('loginRegisterContainer').style.display = 'block';
+
+            // Remover a visibilidade do botão de excluir para todos
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.style.display = 'none';
+            });
         }
 
         // Função para adicionar posts
@@ -320,6 +345,7 @@
                 newPost.innerHTML = `
                     <h3>${localStorage.getItem('username')}</h3>
                     <p>${postInput.value}</p>
+                    <button class="delete-button" onclick="deletePost(this)" style="display: none;">Excluir</button>
                 `;
                 postList.prepend(newPost);
 
@@ -351,17 +377,43 @@
                 postElement.innerHTML = `
                     <h3>${post.username}</h3>
                     <p>${post.content}</p>
+                    <button class="delete-button" onclick="deletePost(this)" style="display: none;">Excluir</button>
                 `;
                 postList.prepend(postElement);
+
+                // Exibe o botão de excluir apenas para o usuário "AMNP"
+                if (localStorage.getItem('username') === 'AMNP') {
+                    postElement.querySelector('.delete-button').style.display = 'inline-block';
+                }
             });
         }
 
+        // Função para excluir posts
+        function deletePost(button) {
+            const post = button.parentElement;
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+            // Remover o post do localStorage
+            const updatedPosts = posts.filter(postData => postData.content !== post.querySelector('p').innerText);
+            localStorage.setItem('posts', JSON.stringify(updatedPosts));
+
+            // Remover o post da página
+            post.remove();
+        }
+
         // Carregar posts quando a página carregar
-        window.onload = function() {
+        window.onload = function () {
             if (localStorage.getItem('username')) {
                 document.getElementById('logoutButton').style.display = 'inline-block';
                 document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
                 loadPosts(); // Carregar posts
+
+                // Exibir botões de excluir posts apenas para o usuário "AMNP"
+                if (localStorage.getItem('username') === 'AMNP') {
+                    document.querySelectorAll('.delete-button').forEach(button => {
+                        button.style.display = 'inline-block';
+                    });
+                }
             } else {
                 document.getElementById('loginRegisterContainer').style.display = 'block';
             }
@@ -370,10 +422,6 @@
 </body>
 
 </html>
-
-
-
-
 
 
 
