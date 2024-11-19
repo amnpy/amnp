@@ -146,6 +146,35 @@
             margin-top: 10px;
             font-size: 0.9rem;
         }
+
+        /* Estilo do botão de postar */
+        .post-button {
+            padding: 12px 20px;
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-button:hover {
+            background-color: #0077cc;
+        }
+
+        .delete-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
+        }
     </style>
 </head>
 
@@ -173,7 +202,7 @@
             <!-- Formulário de novo post -->
             <div class="new-post-form">
                 <input type="text" id="postInput" placeholder="Digite algo...">
-                <button onclick="addPost()">Postar</button>
+                <button class="post-button" onclick="addPost()">Postar</button>
             </div>
 
             <!-- Lista de posts -->
@@ -188,6 +217,8 @@
 
     <!-- Script JavaScript -->
     <script>
+        let currentUser = null;  // Variável para armazenar o usuário logado temporariamente
+
         // Função para adicionar um novo post
         function addPost() {
             const postInput = document.getElementById('postInput');
@@ -243,50 +274,9 @@
         // Carregar os posts quando a página for carregada
         window.onload = loadPosts;
 
-        // Função para exibir posts ao clicar no botão "Início"
-        function showPosts() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <section class="posts">
-                    <h2>Posts</h2>
-                    <div class="new-post-form">
-                        <input type="text" id="postInput" placeholder="Digite algo...">
-                        <button onclick="addPost()">Postar</button>
-                    </div>
-                    <div id="postList"></div>
-                </section>
-            `;
-            loadPosts(); // Carregar posts
-        }
-
-        // Função para mostrar "Sobre"
-        function changeToSobre() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Você clicou em "Sobre"</h2>
-            `;
-        }
-
-        // Função para mostrar "Categorias"
-        function changeToCategorias() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Você clicou em "Categorias"</h2>
-            `;
-        }
-
-        // Função para mostrar "Contato"
-        function changeToContato() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <h2>Você clicou em "Contato"</h2>
-            `;
-        }
-
-        // Função para mostrar "Login"
+        // Função para mostrar a página de login
         function changeToLogin() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
+            document.getElementById('content').innerHTML = `
                 <h2>Login</h2>
                 <div class="login-form">
                     <h3>Entrar na sua conta</h3>
@@ -298,10 +288,9 @@
             `;
         }
 
-        // Função para mostrar o formulário de registro
+        // Função para exibir o formulário de registro
         function showRegister() {
-            const content = document.getElementById('content');
-            content.innerHTML = `
+            document.getElementById('content').innerHTML = `
                 <h2>Cadastro</h2>
                 <div class="login-form">
                     <h3>Criar uma conta</h3>
@@ -316,8 +305,18 @@
         function loginUser() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            alert('Login realizado com sucesso!');
-            // Aqui você pode adicionar uma validação real de login
+
+            if (username === "AMNP" && password === "senha") {
+                currentUser = username;
+                document.getElementById('content').innerHTML = `
+                    <h2>Bem-vindo, ${currentUser}</h2>
+                    <button onclick="logout()">Sair</button>
+                `;
+                // Exibe o botão para excluir posts apenas para usuários logados
+                showDeleteButton();
+            } else {
+                alert('Usuário ou senha inválidos');
+            }
         }
 
         // Função para realizar registro
@@ -325,7 +324,35 @@
             const newUsername = document.getElementById('newUsername').value;
             const newPassword = document.getElementById('newPassword').value;
             alert('Cadastro realizado com sucesso!');
-            // Aqui você pode salvar as informações de registro ou realizar um processo real de cadastro
+        }
+
+        // Função para mostrar o botão de excluir post
+        function showDeleteButton() {
+            if (currentUser === "AMNP") {
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = "Excluir Post";
+                deleteButton.classList.add('delete-button');
+                deleteButton.onclick = deletePost;
+                document.getElementById('content').appendChild(deleteButton);
+            }
+        }
+
+        // Função para excluir o primeiro post
+        function deletePost() {
+            let posts = JSON.parse(localStorage.getItem('posts')) || [];
+            posts.shift(); // Remove o primeiro post
+            localStorage.setItem('posts', JSON.stringify(posts));
+
+            // Atualizar a lista de posts
+            document.getElementById('postList').innerHTML = '';
+            loadPosts();
+        }
+
+        // Função para logout
+        function logout() {
+            currentUser = null;
+            document.getElementById('content').innerHTML = '';
+            alert('Você saiu da sua conta!');
         }
     </script>
 </body>
