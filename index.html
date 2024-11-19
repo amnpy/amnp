@@ -175,6 +175,11 @@
         .logout-button:hover {
             background-color: #ff7f00;
         }
+
+        /* Estilo da seção de posts */
+        .post-section {
+            display: none;
+        }
     </style>
 </head>
 
@@ -187,6 +192,7 @@
                 <li><a href="#" onclick="changeContent('sobre')" id="sobreLink">Sobre</a></li>
                 <li><a href="#" onclick="changeContent('categorias')" id="categoriasLink">Categorias</a></li>
                 <li><a href="#" onclick="changeContent('contato')" id="contatoLink">Contato</a></li>
+                <li><a href="#" onclick="changeContent('posts')" id="postsLink">Posts</a></li>
             </ul>
         </nav>
     </header>
@@ -213,10 +219,24 @@
         <button class="logout-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
     </div>
 
+    <!-- Seção de Conteúdo -->
     <div class="main-content">
         <div id="content">
             <h2>Bem-vindo ao AMNP!</h2>
             <p>Escolha uma opção no menu para ver mais conteúdo.</p>
+        </div>
+
+        <!-- Seção de Posts -->
+        <div id="postsSection" class="post-section">
+            <h2>Poste algo novo</h2>
+            <div class="new-post-form">
+                <input type="text" id="postInput" placeholder="Digite algo..." class="form-input">
+                <button class="form-button" onclick="addPost()">Postar</button>
+            </div>
+
+            <div id="postList">
+                <!-- Os posts serão carregados aqui -->
+            </div>
         </div>
     </div>
 
@@ -225,52 +245,62 @@
     </footer>
 
     <script>
-        // Exibe o formulário de login ou registro
-        function toggleForm(form) {
-            document.querySelector('.login-form').style.display = 'none';
-            document.querySelector('.register-form').style.display = 'none';
-            if (form === 'login') {
-                document.querySelector('.login-form').style.display = 'block';
-            } else if (form === 'register') {
-                document.querySelector('.register-form').style.display = 'block';
+        // Função para mostrar conteúdo baseado no menu
+        function changeContent(page) {
+            const content = document.getElementById('content');
+            const postsSection = document.getElementById('postsSection');
+            if (page === 'inicio') {
+                content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'sobre') {
+                content.innerHTML = "<h2>Sobre nós</h2><p>Informações sobre o site AMNP.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'categorias') {
+                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria abaixo para começar a postar.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'contato') {
+                content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
+                postsSection.style.display = 'none';
+            } else if (page === 'posts') {
+                content.innerHTML = "<h2>Poste algo novo</h2>";
+                postsSection.style.display = 'block'; // Exibe a seção de posts
             }
         }
 
-        // Registrar um novo usuário
-        function register() {
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-            
-            if (username && password) {
-                localStorage.setItem('username', username);
-                localStorage.setItem('password', password);
-                alert('Usuário registrado com sucesso!');
-                toggleForm('login');
-            } else {
-                alert('Por favor, preencha os campos!');
-            }
-        }
-
-        // Realizar o login
+        // Função de login
         function login() {
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
 
-            const storedUsername = localStorage.getItem('username');
-            const storedPassword = localStorage.getItem('password');
-
-            if (username === storedUsername && password === storedPassword) {
-                alert('Login bem-sucedido!');
+            // Verificar se as credenciais estão corretas
+            if (username && password) {
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
                 document.getElementById('logoutButton').style.display = 'inline-block';
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('loggedInUser').textContent = `Olá, ${username}!`;
+                alert('Login bem-sucedido!');
+                document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
             } else {
-                alert('Credenciais incorretas!');
+                alert('Por favor, preencha todos os campos.');
             }
         }
 
-        // Logout do usuário
+        // Função de registro
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (username && password) {
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
+                alert('Cadastro bem-sucedido! Agora, você pode fazer login.');
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
+
+        // Função de logout
         function logout() {
             localStorage.removeItem('username');
             localStorage.removeItem('password');
@@ -278,25 +308,26 @@
             alert('Você saiu com sucesso!');
         }
 
-        // Função para exibir conteúdo nas diferentes páginas
-        function changeContent(page) {
-            const content = document.getElementById('content');
-            if (page === 'inicio') {
-                content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
-            } else if (page === 'sobre') {
-                content.innerHTML = "<h2>Sobre nós</h2><p>Informações sobre o site AMNP.</p>";
-            } else if (page === 'categorias') {
-                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria abaixo para começar a postar.</p>";
-            } else if (page === 'contato') {
-                content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
+        // Função para adicionar posts
+        function addPost() {
+            const postInput = document.getElementById('postInput');
+            const postList = document.getElementById('postList');
+
+            if (postInput.value.trim() !== '') {
+                const newPost = document.createElement('article');
+                newPost.classList.add('post');
+                newPost.innerHTML = `
+                    <h3>${localStorage.getItem('username')}</h3>
+                    <p>${postInput.value}</p>
+                `;
+                postList.prepend(newPost);
+                postInput.value = ''; // Limpa o campo
             }
         }
     </script>
-
 </body>
 
 </html>
-
 
 
 
