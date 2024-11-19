@@ -61,34 +61,6 @@
             text-align: left;
         }
 
-        .posts h2 {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #ff9900;
-            transform: rotate(-5deg);
-            display: inline-block;
-            border-bottom: 2px solid #ff9900;
-            padding-bottom: 10px;
-        }
-
-        .post {
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #444;
-        }
-
-        .post h3 {
-            color: #ff9900;
-            margin-left: 10px;
-        }
-
-        .post p {
-            margin: 10px 0;
-            font-size: 1rem;
-            text-align: left;
-            margin-left: 10px;
-        }
-
         footer {
             text-align: center;
             padding: 20px 0;
@@ -100,71 +72,6 @@
         footer p {
             font-size: 0.9rem;
         }
-
-        .new-post-form input {
-            width: calc(100% - 100px);
-            padding: 10px;
-            margin-right: 10px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .new-post-form button {
-            background: linear-gradient(90deg, #ff9900, #ffcc00);
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .new-post-form button:hover {
-            background: linear-gradient(90deg, #ffcc00, #ff9900);
-            transform: scale(1.1);
-            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        .login-form {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 5px;
-            width: 300px;
-            margin: 20px auto;
-        }
-
-        .login-form input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .login-form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #1da1f2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .login-form button:hover {
-            background-color: #0077cc;
-        }
-
-        .login-form p {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 <body>
@@ -172,29 +79,86 @@
         <h1>AMNP</h1>
         <nav>
             <ul>
-                <li><a href="javascript:void(0)" onclick="showPosts()">Início</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToSobre()">Sobre</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToCategorias()">Categorias</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToContato()">Contato</a></li>
-                <li><a href="javascript:void(0)" onclick="changeToLogin()">Login</a></li>
+                <li><a href="javascript:void(0)" onclick="changeContent('inicio')">Início</a></li>
+                <li><a href="javascript:void(0)" onclick="changeContent('sobre')">Sobre</a></li>
+                <li><a href="javascript:void(0)" onclick="changeContent('categorias')">Categorias</a></li>
+                <li><a href="javascript:void(0)" onclick="changeContent('contato')">Contato</a></li>
+                <li><a href="javascript:void(0)" onclick="changeContent('login')">Login</a></li>
             </ul>
         </nav>
     </header>
     <main class="main-content" id="content">
-        <section class="posts">
-            <h2>Posts</h2>
-            <div class="new-post-form">
-                <input type="text" id="postInput" placeholder="Digite algo...">
-                <button onclick="addPost()">Postar</button>
-            </div>
-            <div id="postList"></div>
-        </section>
+        <h2>Bem-vindo ao AMNP!</h2>
+        <p>Clique nos menus acima para navegar.</p>
     </main>
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
     <script>
-        // JavaScript funcionalidade já explicada anteriormente.
+        // Função para trocar o conteúdo
+        function changeContent(section) {
+            const content = document.getElementById('content');
+            if (section === 'inicio') {
+                content.innerHTML = `
+                    <h2>Início</h2>
+                    <p>Bem-vindo à página inicial do AMNP! Aqui você encontra as últimas novidades.</p>
+                `;
+            } else if (section === 'sobre') {
+                content.innerHTML = `
+                    <h2>Sobre</h2>
+                    <p>Somos o AMNP, dedicados a trazer o melhor conteúdo para você.</p>
+                `;
+            } else if (section === 'categorias') {
+                content.innerHTML = `
+                    <h2>Categorias</h2>
+                    <p>Aqui estão nossas categorias: Tecnologia, Esportes, Entretenimento e muito mais!</p>
+                `;
+            } else if (section === 'contato') {
+                content.innerHTML = `
+                    <h2>Contato</h2>
+                    <p>Entre em contato conosco pelo email: contato@amnp.com.</p>
+                `;
+            } else if (section === 'login') {
+                content.innerHTML = `
+                    <h2>Login</h2>
+                    <div class="login-form">
+                        <h3>Entre na sua conta</h3>
+                        <input type="text" id="username" placeholder="Usuário">
+                        <input type="password" id="password" placeholder="Senha">
+                        <button onclick="loginUser()">Entrar</button>
+                        <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegister()">Cadastre-se</a></p>
+                    </div>
+                `;
+            }
+        }
+
+        // Função de login simulada
+        function loginUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            alert(`Bem-vindo, ${username}! Login realizado com sucesso.`);
+        }
+
+        // Função para exibir o formulário de registro
+        function showRegister() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <h2>Cadastro</h2>
+                <div class="login-form">
+                    <h3>Criar uma conta</h3>
+                    <input type="text" id="newUsername" placeholder="Usuário">
+                    <input type="password" id="newPassword" placeholder="Senha">
+                    <button onclick="registerUser()">Cadastrar</button>
+                </div>
+            `;
+        }
+
+        // Função de registro simulada
+        function registerUser() {
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            alert(`Usuário ${newUsername} cadastrado com sucesso!`);
+        }
     </script>
 </body>
 </html>
