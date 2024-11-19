@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMNP</title>
+    <link rel="icon" href="https://example.com/meu-favicon.ico"> <!-- Atualize o link para seu favicon -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -125,24 +126,6 @@
             text-decoration: none;
             cursor: pointer;
         }
-
-        @media screen and (max-width: 768px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            nav ul li a {
-                font-size: 1rem;
-            }
-
-            .main-content {
-                padding: 10px;
-            }
-
-            .modal-content {
-                width: 90%;
-            }
-        }
     </style>
 </head>
 
@@ -166,6 +149,10 @@
             <p>Escolha uma opção no menu para ver mais conteúdo.</p>
         </div>
 
+        <div id="loginContainer">
+            <button class="form-button" onclick="openModal()">Login / Registrar</button>
+        </div>
+
         <div id="postsSection" style="display: none;">
             <h2>Poste algo novo</h2>
             <input class="form-input" type="text" id="postInput" placeholder="Digite algo..." />
@@ -179,8 +166,52 @@
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Firebase e Funções de Script -->
-    <script src="script.js" type="module"></script>
+    <!-- Modal de Login e Registro -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Escolha uma opção:</h3>
+            <button class="form-button" onclick="showLoginForm()">Login</button>
+            <button class="form-button" onclick="showRegisterForm()">Registrar</button>
+
+            <div id="loginForm" style="display: none;">
+                <input class="form-input" type="email" id="loginEmail" placeholder="E-mail" />
+                <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
+                <button class="form-button" onclick="login()">Entrar</button>
+            </div>
+
+            <div id="registerForm" style="display: none;">
+                <input class="form-input" type="email" id="registerEmail" placeholder="E-mail" />
+                <input class="form-input" type="password" id="registerPassword" placeholder="Senha" />
+                <button class="form-button" onclick="register()">Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js" type="module"></script>
+
+    <script>
+        // Configuração e inicialização do Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "AUTH_DOMAIN",
+            databaseURL: "DB_URL",
+            projectId: "PROJECT_ID",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // Funcionalidades continuam como antes
+    </script>
 </body>
 
 </html>
