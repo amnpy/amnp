@@ -1,161 +1,105 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!-- Modal de Login e Registro -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Escolha uma opção:</h3>
+        <button class="form-button" onclick="showLoginForm()">Login</button>
+        <button class="form-button" onclick="showRegisterForm()">Registrar</button>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMNP</title>
-    <!-- Google Font for a modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
-    <!-- Add Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-
-    <style>
-        /* Your existing styles here... */
-        /* Add styles as necessary */
-    </style>
-</head>
-
-<body>
-    <header>
-        <h1>AMNP</h1>
-        <nav>
-            <ul>
-                <li><a href="#" onclick="changeContent('inicio')" id="inicioLink">Início</a></li>
-                <li><a href="#" onclick="changeContent('sobre')" id="sobreLink">Sobre</a></li>
-                <li><a href="#" onclick="changeContent('categorias')" id="categoriasLink">Categorias</a></li>
-                <li><a href="#" onclick="changeContent('contato')" id="contatoLink">Contato</a></li>
-                <li><a href="#" onclick="changeContent('posts')" id="postsLink">Posts</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <div class="login-register-container" id="loginRegisterContainer">
-        <div class="login-form" id="loginForm">
-            <h3>Login</h3>
-            <input class="form-input" type="email" id="loginEmail" placeholder="Email" />
+        <div id="loginForm" style="display: none;">
+            <input class="form-input" type="email" id="loginEmail" placeholder="E-mail" />
             <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
             <button class="form-button" onclick="login()">Entrar</button>
-            <p id="loginError" style="color: red; display: none;">Por favor, preencha todos os campos.</p>
         </div>
 
-        <div class="register-form" id="registerForm" style="display: none;">
-            <h3>Registrar</h3>
-            <input class="form-input" type="email" id="registerEmail" placeholder="Novo Email" />
-            <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
+        <div id="registerForm" style="display: none;">
+            <input class="form-input" type="email" id="registerEmail" placeholder="E-mail" />
+            <input class="form-input" type="password" id="registerPassword" placeholder="Senha" />
             <button class="form-button" onclick="register()">Registrar</button>
-            <p id="registerError" style="color: red; display: none;">Por favor, preencha todos os campos.</p>
-        </div>
-
-        <button class="logout-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
-    </div>
-
-    <div class="main-content">
-        <div id="content">
-            <h2>Bem-vindo ao AMNP!</h2>
-            <p>Escolha uma opção no menu para ver mais conteúdo.</p>
         </div>
     </div>
+</div>
 
-    <footer>
-        <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
-    </footer>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 
-    <script>
-        // Firebase configuration (use your own Firebase config values here)
-      const firebaseConfig = {
-            apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
-            authDomain: "amnp-af2f0.firebaseapp.com",
-            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "amnp-af2f0",
-            storageBucket: "amnp-af2f0.firebasestorage.app",
-            messagingSenderId: "468676978607",
-            appId: "1:468676978607:web:fe277a7fad97b27b2fb15a"
-        };
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+    // Configuração Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
+        authDomain: "amnp-af2f0.firebaseapp.com",
+        databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "amnp-af2f0",
+        storageBucket: "amnp-af2f0.firebasestorage.app",
+        messagingSenderId: "468676978607",
+        appId: "1:468676978607:web:fe277a7fad97b27b2fb15a",
+        measurementId: "G-VLBG5RE69T"
+    };
 
-        // Show login form
-        function changeContent(page) {
-            const content = document.getElementById('content');
-            if (page === 'inicio') {
-                content.innerHTML = '<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>';
-            } else if (page === 'posts') {
-                content.innerHTML = '<h2>Poste algo novo</h2><p>Insira o conteúdo do seu post aqui.</p>';
-            }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // Funções para mostrar e esconder os formulários
+    function showLoginForm() {
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+    }
+
+    function showRegisterForm() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+
+    // Função de login
+    function login() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                closeModal();
+                alert("Login bem-sucedido!");
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Erro no login: " + error.message);
+            });
+    }
+
+    // Função de registro
+    function register() {
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        if (email === "" || password === "") {
+            alert("Por favor, preencha todos os campos.");
+            return;
         }
 
-        // Login function
-        function login() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                closeModal();
+                alert("Registro bem-sucedido!");
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Erro no registro: " + error.message);
+            });
+    }
 
-            if (email && password) {
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        document.getElementById('loginForm').style.display = 'none';
-                        document.getElementById('registerForm').style.display = 'none';
-                        document.getElementById('logoutButton').style.display = 'inline-block';
-                    })
-                    .catch((error) => {
-                        document.getElementById('loginError').textContent = error.message;
-                        document.getElementById('loginError').style.display = 'block';
-                    });
-            } else {
-                document.getElementById('loginError').textContent = 'Por favor, preencha todos os campos.';
-                document.getElementById('loginError').style.display = 'block';
-            }
-        }
+    // Função para abrir o modal
+    function openModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+    }
 
-        // Register function
-        function register() {
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-
-            if (email && password) {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(() => {
-                        document.getElementById('registerForm').style.display = 'none';
-                        document.getElementById('loginForm').style.display = 'none';
-                        document.getElementById('logoutButton').style.display = 'inline-block';
-                    })
-                    .catch((error) => {
-                        document.getElementById('registerError').textContent = error.message;
-                        document.getElementById('registerError').style.display = 'block';
-                    });
-            } else {
-                document.getElementById('registerError').textContent = 'Por favor, preencha todos os campos.';
-                document.getElementById('registerError').style.display = 'block';
-            }
-        }
-
-        // Logout function
-        function logout() {
-            auth.signOut()
-                .then(() => {
-                    document.getElementById('loginForm').style.display = 'inline-block';
-                    document.getElementById('registerForm').style.display = 'inline-block';
-                    document.getElementById('logoutButton').style.display = 'none';
-                });
-        }
-
-        // Monitor authentication state
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('logoutButton').style.display = 'inline-block';
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('registerForm').style.display = 'none';
-            } else {
-                document.getElementById('logoutButton').style.display = 'none';
-                document.getElementById('loginForm').style.display = 'inline-block';
-                document.getElementById('registerForm').style.display = 'inline-block';
-            }
-        });
-    </script>
-</body>
-
-</html>
+    // Função para fechar o modal
+    function closeModal() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+</script>
