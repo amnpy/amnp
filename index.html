@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMNP</title>
     <style>
-        /* Estilos gerais */
         body {
             font-family: Arial, sans-serif;
             background-image: url('https://preview.redd.it/high-quality-4k-promotional-wallpaper-background-v0-0l2pvt0c4ncc1.png?width=3840&format=png&auto=webp&s=fd1e9cb30510d255fb233204ac6418ce0d830579');
@@ -62,7 +61,8 @@
             background: rgba(0, 0, 0, 0.7);
         }
 
-        .form-input, .form-button {
+        .form-input,
+        .form-button {
             padding: 10px;
             margin: 10px;
             font-size: 1rem;
@@ -100,7 +100,6 @@
             background-color: #cc0000;
         }
 
-        /* Modal de Login e Registro */
         .modal {
             display: none;
             position: fixed;
@@ -204,17 +203,20 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
         // Configuração Firebase
         const firebaseConfig = {
-           apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
-    authDomain: "amnp-af2f0.firebaseapp.com",
-    databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "amnp-af2f0",
-    storageBucket: "amnp-af2f0.firebasestorage.app",
-    messagingSenderId: "468676978607",
-    appId: "1:468676978607:web:fe277a7fad97b27b2fb15a",
-    measurementId: "G-VLBG5RE69T"
-
+            apiKey: "AIzaSyDS5jjyDrHBgfab2mcMtdkWT25y0HyKTPk",
+            authDomain: "amnp-af2f0.firebaseapp.com",
+            databaseURL: "https://amnp-af2f0-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "amnp-af2f0",
+            storageBucket: "amnp-af2f0.firebasestorage.app",
+            messagingSenderId: "468676978607",
+            appId: "1:468676978607:web:fe277a7fad97b27b2fb15a",
+            measurementId: "G-VLBG5RE69T"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -229,7 +231,7 @@
             } else if (page === "sobre") {
                 content.innerHTML = "<h2>Sobre</h2><p>Informações sobre o AMNP.</p>";
             } else if (page === "categorias") {
-                content.innerHTML = "<h2>Categorias</h2><p>Exploração de categorias.</p>";
+                content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria.</p>";
             } else if (page === "contato") {
                 content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
             } else if (page === "posts") {
@@ -239,23 +241,20 @@
             }
         }
 
-        // Abrir o modal de login/registro
+        // Modal Functions
         function openModal() {
             document.getElementById('loginModal').style.display = 'flex';
         }
 
-        // Fechar o modal
         function closeModal() {
             document.getElementById('loginModal').style.display = 'none';
         }
 
-        // Exibe o formulário de login
         function showLoginForm() {
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('loginForm').style.display = 'block';
         }
 
-        // Exibe o formulário de registro
         function showRegisterForm() {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'block';
@@ -265,7 +264,6 @@
         function login() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-
             signInWithEmailAndPassword(auth, email, password)
                 .then(() => {
                     closeModal();
@@ -279,7 +277,6 @@
         function register() {
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
-
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     closeModal();
@@ -293,7 +290,6 @@
         function addPost() {
             const postInput = document.getElementById('postInput');
             const postText = postInput.value.trim();
-
             if (postText !== '') {
                 const postRef = ref(database, 'posts/' + Date.now());
                 set(postRef, {
@@ -305,7 +301,7 @@
             }
         }
 
-        // Função para carregar os posts
+        // Função para carregar posts
         function loadPosts() {
             const postsRef = ref(database, 'posts');
             onValue(postsRef, (snapshot) => {
