@@ -72,6 +72,47 @@
         footer p {
             font-size: 0.9rem;
         }
+
+        .new-post-form input,
+        .new-post-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .new-post-form button {
+            background-color: #1da1f2;
+            color: white;
+            cursor: pointer;
+        }
+
+        .new-post-form button:hover {
+            background-color: #0077cc;
+        }
+
+        .post {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+        }
+
+        .post h3 {
+            color: #ff9900;
+        }
+
+        .post p {
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .post .author {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -87,14 +128,19 @@
             </ul>
         </nav>
     </header>
+
     <main class="main-content" id="content">
         <h2>Bem-vindo ao AMNP!</h2>
         <p>Clique nos menus acima para navegar.</p>
     </main>
+
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
     </footer>
+
     <script>
+        let loggedInUser = null;
+
         // Função para trocar o conteúdo
         function changeContent(section) {
             const content = document.getElementById('content');
@@ -102,22 +148,22 @@
                 content.innerHTML = `
                     <h2>Início</h2>
                     <p>Bem-vindo à página inicial do AMNP! Aqui você encontra as últimas novidades.</p>
+                    ${loggedInUser ? `
+                        <div class="new-post-form">
+                            <input type="text" id="postInput" placeholder="Escreva algo..." />
+                            <button onclick="addPost()">Postar</button>
+                        </div>
+                        <h3>Posts:</h3>
+                        <div id="postList"></div>
+                    ` : '<p>Faça login para começar a postar!</p>'}
                 `;
+                loadPosts(); // Carregar posts se houver login
             } else if (section === 'sobre') {
-                content.innerHTML = `
-                    <h2>Sobre</h2>
-                    <p>Somos o AMNP, dedicados a trazer o melhor conteúdo para você.</p>
-                `;
+                content.innerHTML = `<h2>Sobre</h2><p>Somos o AMNP, dedicados a trazer o melhor conteúdo para você.</p>`;
             } else if (section === 'categorias') {
-                content.innerHTML = `
-                    <h2>Categorias</h2>
-                    <p>Aqui estão nossas categorias: Tecnologia, Esportes, Entretenimento e muito mais!</p>
-                `;
+                content.innerHTML = `<h2>Categorias</h2><p>Aqui estão nossas categorias: Tecnologia, Esportes, Entretenimento e muito mais!</p>`;
             } else if (section === 'contato') {
-                content.innerHTML = `
-                    <h2>Contato</h2>
-                    <p>Entre em contato conosco pelo email: contato@amnp.com.</p>
-                `;
+                content.innerHTML = `<h2>Contato</h2><p>Entre em contato conosco pelo email: contato@amnp.com.</p>`;
             } else if (section === 'login') {
                 content.innerHTML = `
                     <h2>Login</h2>
@@ -136,7 +182,13 @@
         function loginUser() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            alert(`Bem-vindo, ${username}! Login realizado com sucesso.`);
+            if (username && password) {
+                loggedInUser = username;
+                alert(`Bem-vindo, ${username}! Login realizado com sucesso.`);
+                changeContent('inicio');
+            } else {
+                alert('Por favor, preencha ambos os campos!');
+            }
         }
 
         // Função para exibir o formulário de registro
@@ -158,6 +210,51 @@
             const newUsername = document.getElementById('newUsername').value;
             const newPassword = document.getElementById('newPassword').value;
             alert(`Usuário ${newUsername} cadastrado com sucesso!`);
+        }
+
+        // Função para adicionar um post
+        function addPost() {
+            const postInput = document.getElementById('postInput');
+            if (postInput.value.trim() === '') return;
+
+            const postList = document.getElementById('postList');
+            const newPost = {
+                title: "Novo Post",
+                content: postInput.value,
+                author: loggedInUser
+            };
+
+            // Criar o elemento do post
+            const postElement = document.createElement('article');
+            postElement.classList.add('post');
+            postElement.innerHTML = `
+                <h3>${newPost.title}</h3>
+                <p>${newPost.content}</p>
+                <p class="author">Postado por: ${newPost.author}</p>
+            `;
+            
+            postList.prepend(postElement);
+            postInput.value = ''; // Limpar o campo de texto
+        }
+
+        // Função para carregar posts (Simulando carregamento de posts)
+        function loadPosts() {
+            const postList = document.getElementById('postList');
+            const posts = [
+                { title: "Primeiro Post", content: "Este é o primeiro post!", author: "admin" },
+                { title: "Segundo Post", content: "Outro post legal por aqui.", author: "admin" }
+            ];
+
+            posts.forEach(post => {
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p>${post.content}</p>
+                    <p class="author">Postado por: ${post.author}</p>
+                `;
+                postList.appendChild(postElement);
+            });
         }
     </script>
 </body>
