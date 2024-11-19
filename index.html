@@ -149,6 +149,11 @@
             font-size: 1.2rem;
             color: #ff9900;
         }
+
+        /* Ajuste de estilo para os links de navegação */
+        .nav-active {
+            color: #ff9900;
+        }
     </style>
 </head>
 
@@ -157,12 +162,10 @@
         <h1>AMNP</h1>
         <nav>
             <ul>
-                <li><a href="#" onclick="toggleForm('login')">Login</a></li>
-                <li><a href="#" onclick="toggleForm('register')">Registrar</a></li>
-                <li><a href="#">Início</a></li>
-                <li><a href="#">Sobre</a></li>
-                <li><a href="#">Categorias</a></li>
-                <li><a href="#">Contato</a></li>
+                <li><a href="#" onclick="changeContent('inicio')" id="inicioLink">Início</a></li>
+                <li><a href="#" onclick="changeContent('sobre')" id="sobreLink">Sobre</a></li>
+                <li><a href="#" onclick="changeContent('categorias')" id="categoriasLink">Categorias</a></li>
+                <li><a href="#" onclick="changeContent('contato')" id="contatoLink">Contato</a></li>
             </ul>
         </nav>
     </header>
@@ -183,20 +186,11 @@
             <button class="form-button" onclick="register()">Registrar</button>
         </div>
 
-        <!-- Posts -->
-        <section class="posts">
-            <h2>Posts</h2>
-            <div id="postList">
-                <article class="post">
-                    <h3>Primeiro Post</h3>
-                    <p>P:.</p>
-                </article>
-                <article class="post">
-                    <h3>Segundo Post</h3>
-                    <p>A VIDA SEMPRE DECIDE.</p>
-                </article>
-            </div>
-        </section>
+        <!-- Conteúdo dinâmico -->
+        <div id="content">
+            <h2>Bem-vindo ao AMNP!</h2>
+            <p>Escolha uma opção no menu para ver mais conteúdo.</p>
+        </div>
 
         <!-- Nome do usuário logado -->
         <div class="logged-in-user" id="loggedInUser"></div>
@@ -262,11 +256,40 @@
             alert('Você saiu!');
             document.querySelector('.logout-button').style.display = 'none';
             document.querySelector('#loggedInUser').textContent = '';
+            changeContent('inicio'); // Volta para a página inicial
+        }
+
+        // Função para alterar o conteúdo com base nos links clicados
+        function changeContent(page) {
+            const content = document.getElementById('content');
+            const links = document.querySelectorAll('nav ul li a');
+            links.forEach(link => link.classList.remove('nav-active')); // Remove a classe de ativo
+
+            // Marca o link ativo
+            document.getElementById(page + 'Link').classList.add('nav-active');
+
+            // Altera o conteúdo
+            if (page === 'inicio') {
+                content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
+            } else if (page === 'sobre') {
+                content.innerHTML = "<h2>Sobre nós</h2><p>Informações sobre o site AMNP.</p>";
+            } else if (page === 'categorias') {
+                content.innerHTML = "<h2>Categorias</h2><p>Veja as categorias disponíveis.</p>";
+            } else if (page === 'contato') {
+                content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
+            }
         }
 
         // Verifica se o usuário está logado ao carregar a página
         if (localStorage.getItem('username')) {
-            document.querySelector('.logout-button').style.display =
+            document.querySelector('.logout-button').style.display = 'inline-block';
+            document.querySelector('#loggedInUser').textContent = `Olá, ${localStorage.getItem('username')}!`;
+            changeContent('inicio'); // Exibe a página inicial ao logar
+        }
+    </script>
+</body>
+
+</html>
 
 
 
