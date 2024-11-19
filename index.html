@@ -100,8 +100,6 @@
             font-size: 0.9rem;
         }
 
-       
-
         /* Formulário de Novo Post */
         .new-post-form {
             margin-bottom: 20px;
@@ -159,20 +157,10 @@
 
             <!-- Lista de posts -->
             <div id="postList">
-                <article class="post">
-                    <h3>Primeiro Post</h3>
-                    <p>P:.</p>
-                </article>
-                <article class="post">
-                    <h3>Segundo Post</h3>
-                    <p>A VIDA SEMPRE DECIDE.</p>
-                </article>
+                <!-- Os posts serão carregados aqui -->
             </div>
         </section>
     </main>
-
-    <!-- Botão de Postar -->
-    <button class="post-button" onclick="scrollToTop()">+</button>
 
     <!-- Rodapé -->
     <footer>
@@ -181,86 +169,64 @@
 
     <!-- Script JavaScript -->
     <script>
+        // Função para adicionar um novo post
         function addPost() {
             const postInput = document.getElementById('postInput');
             const postList = document.getElementById('postList');
 
             if (postInput.value.trim() !== '') {
-                const newPost = document.createElement('article');
-                newPost.classList.add('post');
-                newPost.innerHTML = `
-                    <h3>Novo Post</h3>
-                    <p>${postInput.value}</p>
+                const newPost = {
+                    title: "Novo Post",
+                    content: postInput.value
+                };
+
+                // Carregar os posts existentes do localStorage ou criar um novo array
+                let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+                // Adicionar o novo post ao array
+                posts.unshift(newPost); // Adiciona no início da lista
+
+                // Salvar os posts atualizados no localStorage
+                localStorage.setItem('posts', JSON.stringify(posts));
+
+                // Criar o elemento do post
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${newPost.title}</h3>
+                    <p>${newPost.content}</p>
                 `;
-                postList.prepend(newPost); // Adiciona o post no início
-                postInput.value = ''; // Limpa o campo
+                
+                // Adicionar o novo post na lista de posts
+                postList.prepend(postElement);
+                
+                postInput.value = ''; // Limpar o campo de texto
             }
         }
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Função para carregar os posts do localStorage ao carregar a página
+        function loadPosts() {
+            const postList = document.getElementById('postList');
+            const posts = JSON.parse(localStorage.getItem('posts')) || []; // Carregar ou criar array vazio
 
-            // Função para adicionar um novo post
-function addPost() {
-    const postInput = document.getElementById('postInput');
-    const postList = document.getElementById('postList');
-
-    if (postInput.value.trim() !== '') {
-        const newPost = {
-            title: "Novo Post",
-            content: postInput.value
-        };
-
-        // Carregar os posts existentes do localStorage ou criar um novo array
-        let posts = JSON.parse(localStorage.getItem('posts')) || [];
-
-        // Adicionar o novo post ao array
-        posts.unshift(newPost); // Adiciona no início da lista
-
-        // Salvar os posts atualizados no localStorage
-        localStorage.setItem('posts', JSON.stringify(posts));
-
-        // Criar o elemento do post
-        const postElement = document.createElement('article');
-        postElement.classList.add('post');
-        postElement.innerHTML = `
-            <h3>${newPost.title}</h3>
-            <p>${newPost.content}</p>
-        `;
-        
-        // Adicionar o novo post na lista de posts
-        postList.prepend(postElement);
-        
-        postInput.value = ''; // Limpar o campo de texto
-    }
-}
-
-// Função para carregar os posts do localStorage ao carregar a página
-function loadPosts() {
-    const postList = document.getElementById('postList');
-    const posts = JSON.parse(localStorage.getItem('posts')) || []; // Carregar ou criar array vazio
-
-    // Adicionar cada post ao DOM
-    posts.forEach(post => {
-        const postElement = document.createElement('article');
-        postElement.classList.add('post');
-        postElement.innerHTML = `
-            <h3>${post.title}</h3>
-            <p>${post.content}</p>
-        `;
-        postList.appendChild(postElement);
-    });
-}
-
-// Carregar os posts quando a página for carregada
-window.onload = loadPosts;
-
+            // Adicionar cada post ao DOM
+            posts.forEach(post => {
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p>${post.content}</p>
+                `;
+                postList.appendChild(postElement);
+            });
         }
+
+        // Carregar os posts quando a página for carregada
+        window.onload = loadPosts;
     </script>
 </body>
 
 </html>
-
 
 
 
