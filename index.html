@@ -84,20 +84,6 @@
             font-size: 1rem;
         }
 
-        button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #ff9900;
-        }
-
         footer {
             text-align: center;
             padding: 20px 0;
@@ -110,6 +96,31 @@
         footer p {
             font-size: 0.9rem;
         }
+
+        /* Botão de Postar (Estilo Twitter/X) */
+        .post-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .post-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 
@@ -119,6 +130,39 @@
         <h1>AMNP</h1>
         <nav>
             <ul>
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Categorias</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <section class="posts">
+            <h2>Posts</h2>
+            <article class="post">
+                <h3>Primeiro Post</h3>
+                <p>P:.</p>
+            </article>
+            <article class="post">
+                <h3>Segundo Post</h3>
+                <p>A VIDA SEMPRE DECIDE.</p>
+            </article>
+        </section>
+    </main>
+
+    <!-- Botão de Postar -->
+    <button class="post-button">+</button>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
+    </footer>
+</body>
+
+</html>
 
 
 
