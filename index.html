@@ -107,23 +107,29 @@
             font-size: 0.9rem;
         }
 
-        /* Formulário de Novo Post */
-        .new-post-form {
-            margin-bottom: 20px;
+        /* Estilo para o formulário de login */
+        .login-form {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .new-post-form input {
-            width: calc(100% - 100px);
+        .login-form input {
+            width: 100%;
             padding: 10px;
+            margin-bottom: 10px;
             font-size: 1rem;
             border: 1px solid #ddd;
             border-radius: 5px;
-            margin-right: 10px;
         }
 
-        .new-post-form button {
-            padding: 10px 20px;
-            font-size: 1rem;
+        .login-form button {
+            width: 100%;
+            padding: 10px;
             background-color: #1da1f2;
             color: white;
             border: none;
@@ -131,8 +137,14 @@
             cursor: pointer;
         }
 
-        .new-post-form button:hover {
+        .login-form button:hover {
             background-color: #0077cc;
+        }
+
+        .login-form p {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -147,6 +159,7 @@
                 <li><a href="javascript:void(0)" onclick="changeToSobre()">Sobre</a></li>
                 <li><a href="javascript:void(0)" onclick="changeToCategorias()">Categorias</a></li>
                 <li><a href="javascript:void(0)" onclick="changeToContato()">Contato</a></li>
+                <li><a href="javascript:void(0)" onclick="changeToLogin()">Login</a></li> <!-- Novo item para Login -->
             </ul>
         </nav>
     </header>
@@ -243,37 +256,76 @@
                     <div id="postList"></div>
                 </section>
             `;
-            loadPosts(); // Carregar os posts
+            loadPosts(); // Carregar posts
         }
 
-        // Função para mudar o conteúdo da página para "Sobre"
+        // Função para mostrar "Sobre"
         function changeToSobre() {
             const content = document.getElementById('content');
             content.innerHTML = `
-                <section>
-                    <h2>Você clicou em Sobre!</h2>
-                </section>
+                <h2>Você clicou em "Sobre"</h2>
             `;
         }
 
-        // Função para mudar o conteúdo da página para "Categorias"
+        // Função para mostrar "Categorias"
         function changeToCategorias() {
             const content = document.getElementById('content');
             content.innerHTML = `
-                <section>
-                    <h2>Você clicou em Categorias!</h2>
-                </section>
+                <h2>Você clicou em "Categorias"</h2>
             `;
         }
 
-        // Função para mudar o conteúdo da página para "Contato"
+        // Função para mostrar "Contato"
         function changeToContato() {
             const content = document.getElementById('content');
             content.innerHTML = `
-                <section>
-                    <h2>Você clicou em Contato!</h2>
-                </section>
+                <h2>Você clicou em "Contato"</h2>
             `;
+        }
+
+        // Função para mostrar "Login"
+        function changeToLogin() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <h2>Login</h2>
+                <div class="login-form">
+                    <h3>Entrar na sua conta</h3>
+                    <input type="text" id="username" placeholder="Usuário">
+                    <input type="password" id="password" placeholder="Senha">
+                    <button onclick="loginUser()">Entrar</button>
+                    <p>Não tem uma conta? <a href="javascript:void(0)" onclick="showRegister()">Cadastre-se</a></p>
+                </div>
+            `;
+        }
+
+        // Função para mostrar o formulário de registro
+        function showRegister() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <h2>Cadastro</h2>
+                <div class="login-form">
+                    <h3>Criar uma conta</h3>
+                    <input type="text" id="newUsername" placeholder="Novo Usuário">
+                    <input type="password" id="newPassword" placeholder="Nova Senha">
+                    <button onclick="registerUser()">Cadastrar</button>
+                </div>
+            `;
+        }
+
+        // Função para realizar login
+        function loginUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            alert('Login realizado com sucesso!');
+            // Aqui você pode adicionar uma validação real de login
+        }
+
+        // Função para realizar registro
+        function registerUser() {
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            alert('Cadastro realizado com sucesso!');
+            // Aqui você pode salvar as informações de registro ou realizar um processo real de cadastro
         }
     </script>
 </body>
