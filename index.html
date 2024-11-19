@@ -279,6 +279,7 @@
                 document.getElementById('logoutButton').style.display = 'inline-block';
                 alert('Login bem-sucedido!');
                 document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
+                loadPosts(); // Carregar posts armazenados
             } else {
                 alert('Por favor, preencha todos os campos.');
             }
@@ -321,20 +322,54 @@
                     <p>${postInput.value}</p>
                 `;
                 postList.prepend(newPost);
+
+                // Salvar post no localStorage
+                savePost(postInput.value);
                 postInput.value = ''; // Limpa o campo
+            }
+        }
+
+        // Função para salvar o post no localStorage
+        function savePost(postContent) {
+            let posts = JSON.parse(localStorage.getItem('posts')) || [];
+            posts.push({
+                username: localStorage.getItem('username'),
+                content: postContent
+            });
+            localStorage.setItem('posts', JSON.stringify(posts));
+        }
+
+        // Função para carregar posts
+        function loadPosts() {
+            const postList = document.getElementById('postList');
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            postList.innerHTML = ''; // Limpa a lista de posts
+
+            posts.forEach(post => {
+                const postElement = document.createElement('article');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h3>${post.username}</h3>
+                    <p>${post.content}</p>
+                `;
+                postList.prepend(postElement);
+            });
+        }
+
+        // Carregar posts quando a página carregar
+        window.onload = function() {
+            if (localStorage.getItem('username')) {
+                document.getElementById('logoutButton').style.display = 'inline-block';
+                document.getElementById('loginRegisterContainer').style.display = 'none'; // Esconde o login
+                loadPosts(); // Carregar posts
+            } else {
+                document.getElementById('loginRegisterContainer').style.display = 'block';
             }
         }
     </script>
 </body>
 
 </html>
-
-
-
-
-
-
-
 
 
 
