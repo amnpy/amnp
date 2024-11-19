@@ -101,16 +101,16 @@
         }
 
         .form-input {
-            width: 300px;
-            padding: 10px;
-            margin: 10px;
+            width: 200px;
+            padding: 8px;
+            margin: 5px;
             font-size: 1rem;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
 
         .form-button {
-            padding: 10px 20px;
+            padding: 8px 15px;
             font-size: 1rem;
             background-color: #1da1f2;
             color: white;
@@ -143,8 +143,37 @@
             background-color: #ff7f00;
         }
 
-        .nav-active {
-            color: #ff9900;
+        /* Login e registro no canto superior direito */
+        .login-register-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-form, .register-form {
+            margin: 5px;
+            text-align: center;
+        }
+
+        .login-register-container input {
+            margin: 5px;
+        }
+
+        .logout-button {
+            padding: 10px;
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #ff7f00;
         }
     </style>
 </head>
@@ -162,52 +191,44 @@
         </nav>
     </header>
 
-    <div class="main-content">
-        <!-- Formulários de login e registro -->
-        <div class="login-form">
-            <h2>Login</h2>
+    <!-- Login e Registro no canto superior direito -->
+    <div class="login-register-container" id="loginRegisterContainer">
+        <!-- Formulário de login -->
+        <div class="login-form" id="loginForm" style="display: none;">
+            <h3>Login</h3>
             <input class="form-input" type="text" id="loginUsername" placeholder="Usuário" />
             <input class="form-input" type="password" id="loginPassword" placeholder="Senha" />
             <button class="form-button" onclick="login()">Entrar</button>
         </div>
 
-        <div class="register-form">
-            <h2>Registrar</h2>
+        <!-- Formulário de registro -->
+        <div class="register-form" id="registerForm" style="display: none;">
+            <h3>Registrar</h3>
             <input class="form-input" type="text" id="registerUsername" placeholder="Novo Usuário" />
             <input class="form-input" type="password" id="registerPassword" placeholder="Nova Senha" />
             <button class="form-button" onclick="register()">Registrar</button>
         </div>
 
-        <!-- Conteúdo dinâmico -->
+        <!-- Botão de logout -->
+        <button class="logout-button" id="logoutButton" onclick="logout()" style="display: none;">Sair</button>
+    </div>
+
+    <div class="main-content">
         <div id="content">
             <h2>Bem-vindo ao AMNP!</h2>
             <p>Escolha uma opção no menu para ver mais conteúdo.</p>
-        </div>
-
-        <!-- Nome do usuário logado -->
-        <div class="logged-in-user" id="loggedInUser"></div>
-
-        <!-- Formulário de post na categoria -->
-        <div id="category-post-form" style="display: none;">
-            <input type="text" id="categoryPostInput" class="form-input" placeholder="Digite seu post aqui...">
-            <button class="form-button" onclick="postInCategory()">Postar na Categoria</button>
-            <div id="categoryPosts"></div>
         </div>
     </div>
 
     <footer>
         <p>&copy; 2024 AMNP. Todos os direitos reservados.</p>
-        <button class="logout-button" onclick="logout()">Sair</button>
     </footer>
 
     <script>
         // Exibe o formulário de login ou registro
         function toggleForm(form) {
-            // Esconde todos os formulários
             document.querySelector('.login-form').style.display = 'none';
             document.querySelector('.register-form').style.display = 'none';
-            
-            // Exibe o formulário solicitado
             if (form === 'login') {
                 document.querySelector('.login-form').style.display = 'block';
             } else if (form === 'register') {
@@ -240,9 +261,10 @@
 
             if (username === storedUsername && password === storedPassword) {
                 alert('Login bem-sucedido!');
-                document.querySelector('.logout-button').style.display = 'inline-block';
-                document.querySelector('.login-form').style.display = 'none';
-                document.querySelector('#loggedInUser').textContent = `Olá, ${username}!`;
+                document.getElementById('logoutButton').style.display = 'inline-block';
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loggedInUser').textContent = `Olá, ${username}!`;
             } else {
                 alert('Credenciais incorretas!');
             }
@@ -252,54 +274,21 @@
         function logout() {
             localStorage.removeItem('username');
             localStorage.removeItem('password');
-            alert('Você saiu!');
-            document.querySelector('.logout-button').style.display = 'none';
-            document.querySelector('#loggedInUser').textContent = '';
-            changeContent('inicio'); // Volta para a página inicial
+            document.getElementById('logoutButton').style.display = 'none';
+            alert('Você saiu com sucesso!');
         }
 
-        // Troca o conteúdo da página com base na opção do menu
+        // Função para exibir conteúdo nas diferentes páginas
         function changeContent(page) {
             const content = document.getElementById('content');
-            const categoryPostForm = document.getElementById('category-post-form');
-
             if (page === 'inicio') {
                 content.innerHTML = "<h2>Bem-vindo ao AMNP!</h2><p>Escolha uma opção no menu para ver mais conteúdo.</p>";
             } else if (page === 'sobre') {
                 content.innerHTML = "<h2>Sobre nós</h2><p>Informações sobre o site AMNP.</p>";
             } else if (page === 'categorias') {
                 content.innerHTML = "<h2>Categorias</h2><p>Escolha uma categoria abaixo para começar a postar.</p>";
-                content.innerHTML += "<button class='category-button' onclick='showCategoryForm()'>Postar na Categoria</button>";
             } else if (page === 'contato') {
                 content.innerHTML = "<h2>Contato</h2><p>Entre em contato conosco.</p>";
-            }
-        }
-
-        // Mostra o formulário de postagem na categoria
-        function showCategoryForm() {
-            document.getElementById('category-post-form').style.display = 'block';
-            const posts = JSON.parse(localStorage.getItem('categoryPosts')) || [];
-            const categoryPostsDiv = document.getElementById('categoryPosts');
-            categoryPostsDiv.innerHTML = '';
-            posts.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.classList.add('post');
-                postElement.innerHTML = `<h3>${post.username}</h3><p>${post.content}</p>`;
-                categoryPostsDiv.appendChild(postElement);
-            });
-        }
-
-        // Postar na categoria
-        function postInCategory() {
-            const postContent = document.getElementById('categoryPostInput').value;
-            if (postContent && localStorage.getItem('username')) {
-                const posts = JSON.parse(localStorage.getItem('categoryPosts')) || [];
-                posts.push({ username: localStorage.getItem('username'), content: postContent });
-                localStorage.setItem('categoryPosts', JSON.stringify(posts));
-                document.getElementById('categoryPostInput').value = ''; // Limpa o campo
-                showCategoryForm(); // Atualiza os posts
-            } else {
-                alert('Você precisa estar logado para postar!');
             }
         }
     </script>
@@ -307,7 +296,6 @@
 </body>
 
 </html>
-
 
 
 
